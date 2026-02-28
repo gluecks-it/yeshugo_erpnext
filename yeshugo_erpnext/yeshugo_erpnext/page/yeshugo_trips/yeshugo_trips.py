@@ -210,7 +210,7 @@ def get_trips_overview(vehicle=None, from_date=None, to_date=None):
 			"start_latitude", "start_longitude", "start_address",
 			"end_latitude", "end_longitude", "end_address",
 			"business_distance", "private_distance", "commute_distance",
-			"comment", "driver", "billed", "timesheet"
+			"comment", "driver", "billed", "timesheet", "delivery_note"
 		],
 		order_by="start_time asc"
 	)
@@ -568,6 +568,7 @@ def add_timesheet_entry(
 			trip.timesheet = ts.name
 			trip.timesheet_detail = timesheet_detail_name
 			trip.billed = 1
+			trip.comment = comment_text
 			trip.save(ignore_permissions=True)
 
 			# Sync comment to YesHugo API
@@ -590,6 +591,7 @@ def add_timesheet_entry(
 		"timesheet": ts.name,
 		"timesheet_created": timesheet_created,
 		"hours": round(hours, 2),
+		"comment": comment_text,
 		"message": _("Time entry added to timesheet {0}").format(ts.name)
 	}
 

@@ -1700,10 +1700,9 @@ class YesHugoTripsPage {
 						</div>
 					`;
 
-					// Track last non-empty comment for copy button
-					if (trip.comment && trip.comment.trim()) {
-						lastTripComment = trip.comment.trim();
-					}
+					// Track immediate previous trip's comment for copy button
+					// Reset each time so only the direct predecessor counts
+					lastTripComment = (trip.comment && trip.comment.trim()) ? trip.comment.trim() : '';
 
 					// Check if there's a stop after this trip (only for non-private trips)
 					if (!isPrivate) {
@@ -1797,10 +1796,14 @@ class YesHugoTripsPage {
 													${stop.location}
 												</div>
 												<div class="stop-content">
-													<div class="billed-info" style="margin: 0;">
+													${trip.timesheet ? `<div class="billed-info" style="margin: 0;">
 														<i class="fa fa-file-text-o"></i>
 														<a href="/app/timesheet/${trip.timesheet}" target="_blank">${trip.timesheet}</a>
-													</div>
+													</div>` : ''}
+													${trip.delivery_note ? `<div class="billed-info" style="margin: ${trip.timesheet ? '6px' : '0'} 0 0 0;">
+														<i class="fa fa-truck"></i>
+														<a href="/app/delivery-note/${trip.delivery_note}" target="_blank">${trip.delivery_note}</a>
+													</div>` : ''}
 													${hasCoords ? `
 													<div class="stop-map-container" style="height: 150px;">
 														<iframe src="${mapUrl}" loading="lazy"></iframe>
@@ -2246,7 +2249,119 @@ class YesHugoTripsPage {
 		});
 	}
 
+	/**
+	 * Show or hide the "von oben kopieren" button on the next trip
+	 * based on whether the current trip now has a non-empty comment.
+	 */
+	update_copy_button_for_next_trip(currentTripItem) {
+		// Find next trip element (skip stops)
+		let next = currentTripItem.next();
+		while (next.length && !next.hasClass('trip')) {
+			next = next.next();
+		}
+		if (!next.length) return;
+
+		const nextSection = next.find('.trip-comment-section');
+		if (!nextSection.length) return;
+
+		// Check if the DIRECT previous trip has a comment (only immediate predecessor counts)
+		let hasPrevComment = false;
+		let prev = next.prev();
+		while (prev.length && !prev.hasClass('trip')) {
+			prev = prev.prev();
+		}
+		if (prev.length && prev.hasClass('trip')) {
+			const prevInput = prev.find('.trip-comment-input');
+			hasPrevComment = !!(prevInput.length && prevInput.val() && prevInput.val().trim());
+		}
+
+		const existingBtn = nextSection.find('.btn-copy-last-comment');
+
+		if (hasPrevComment) {
+			// Show button if not already present
+			if (!existingBtn.length) {
+				const copyBtn = $(`<button class="btn-copy-last-comment" title="${__('Kommentar von vorheriger Fahrt übernehmen')}">
+					<i class="fa fa-arrow-up"></i><i class="fa fa-copy"></i>
+				</button>`);
+				nextSection.find('.btn-update-comment').before(copyBtn);
+				// Bind click handler on new button
+				this.bind_single_copy_button(copyBtn);
+			}
+		} else {
+			// Remove button if present
+			existingBtn.remove();
+		}
+	}
+
+	/**
+	 * Bind click handler for a single dynamically added copy-comment button.
+	 */
+	bind_single_copy_button(btn) {
+		const self = this;
+		btn.on('click', async function() {
+			const b = $(this);
+			const section = b.closest('.trip-comment-section');
+			const tripName = section.data('trip-name');
+			const input = section.find('.trip-comment-input');
+
+			const currentTripItem = section.closest('.timeline-item.trip');
+			let prevComment = '';
+			let prev = currentTripItem.prev();
+
+			while (prev.length) {
+				if (prev.hasClass('trip')) {
+					const prevInput = prev.find('.trip-comment-input');
+					if (prevInput.length && prevInput.val().trim()) {
+						prevComment = prevInput.val().trim();
+						break;
+					}
+				}
+				prev = prev.prev();
+			}
+
+			if (!prevComment) {
+				frappe.show_alert({
+					message: __('Kein vorheriger Kommentar gefunden'),
+					indicator: 'orange'
+				});
+				return;
+			}
+
+			input.val(prevComment);
+			b.prop('disabled', true);
+
+			try {
+				const result = await frappe.call({
+					method: 'yeshugo_erpnext.yeshugo_erpnext.page.yeshugo_trips.yeshugo_trips.update_trip_comment',
+					args: {
+						trip_name: tripName,
+						comment: prevComment
+					}
+				});
+
+				if (result.message && result.message.success) {
+					section.find('.comment-missing-indicator').remove();
+					frappe.show_alert({
+						message: __('Kommentar übernommen'),
+						indicator: 'green'
+					});
+					// Update copy button on the next trip
+					self.update_copy_button_for_next_trip(currentTripItem);
+				}
+			} catch (error) {
+				console.error('Copy comment error:', error);
+				frappe.show_alert({
+					message: __('Fehler beim Speichern'),
+					indicator: 'red'
+				});
+			}
+
+			b.prop('disabled', false);
+		});
+	}
+
 	bind_comment_buttons() {
+		const self = this;
 		// Edit/Save comment button
 		this.page.main.find('.btn-update-comment').on('click', async function() {
 			const btn = $(this);
@@ -2281,6 +2396,9 @@ class YesHugoTripsPage {
 							message: __('Kommentar gespeichert'),
 							indicator: 'green'
 						});
+						// Update copy button on the next trip
+						const currentTripItem = section.closest('.timeline-item.trip');
+						self.update_copy_button_for_next_trip(currentTripItem);
 					}
 				} catch (error) {
 					console.error('Comment update error:', error);
@@ -2614,6 +2732,9 @@ class YesHugoTripsPage {
 						tripCard.addClass('private');
 						timelineItem.addClass('private');
 
+						// Remove the ? indicator for private trips
+						tripCard.find('.comment-missing-indicator').remove();
+
 						// Hide the stop card for private trips
 						if (isNextAStop) {
 							nextElement.slideUp(200).addClass('hidden-by-private');
@@ -2622,6 +2743,17 @@ class YesHugoTripsPage {
 						// Show the stop card again if it was hidden by private
 						if (isNextAStop && nextElement.hasClass('hidden-by-private')) {
 							nextElement.slideDown(200).removeClass('hidden-by-private');
+						}
+
+						// Re-add the ? indicator if comment is empty
+						const commentSection = tripCard.find('.trip-comment-section');
+						const commentInput = commentSection.find('.trip-comment-input');
+						if (!commentInput.val() || !commentInput.val().trim()) {
+							if (!commentSection.find('.comment-missing-indicator').length) {
+								commentSection.find('.comment-input-row').prepend(
+									'<span class="comment-missing-indicator" title="' + __('Kommentar fehlt') + '">?</span>'
+								);
+							}
 						}
 					}
 
@@ -2877,6 +3009,18 @@ class YesHugoTripsPage {
 						message: data.message + (linkedTrips.length > 0 ? ` (+ ${linkedTrips.length} ${__('verknüpfte Stopps')})` : ''),
 						indicator: 'green'
 					});
+
+					// Update trip comment in DOM and copy button on the next trip
+					const stopItem = stopCard.closest('.timeline-item.stop');
+					let tripItem = stopItem.prev();
+					while (tripItem.length && !tripItem.hasClass('trip')) {
+						tripItem = tripItem.prev();
+					}
+					if (tripItem.length && data.comment) {
+						tripItem.find('.trip-comment-input').val(data.comment);
+						tripItem.find('.comment-missing-indicator').remove();
+						self.update_copy_button_for_next_trip(tripItem);
+					}
 				} else {
 					frappe.msgprint({
 						title: __('Fehler'),
