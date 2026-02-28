@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "autoname": "field:external_id",
+ "creation": "2026-01-29 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle",
+  "external_id",
+  "column_break_1",
+  "plugged_in_at",
+  "unplugged_at",
+  "section_charging",
+  "charged_kwh",
+  "charge_type",
+  "charge_limit",
+  "charged_over_limit",
+  "column_break_2",
+  "start_soc_percent",
+  "end_soc_percent",
+  "start_range_km",
+  "end_range_km",
+  "section_location",
+  "latitude",
+  "longitude",
+  "address"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Vehicle",
+   "options": "YesHugo Vehicle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "external_id",
+   "fieldtype": "Data",
+   "label": "External ID",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "plugged_in_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Plugged In At"
+  },
+  {
+   "fieldname": "unplugged_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Unplugged At"
+  },
+  {
+   "fieldname": "section_charging",
+   "fieldtype": "Section Break",
+   "label": "Charging Details"
+  },
+  {
+   "fieldname": "charged_kwh",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Charged (kWh)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "charge_type",
+   "fieldtype": "Data",
+   "label": "Charge Type"
+  },
+  {
+   "fieldname": "charge_limit",
+   "fieldtype": "Int",
+   "label": "Charge Limit (%)"
+  },
+  {
+   "default": "0",
+   "fieldname": "charged_over_limit",
+   "fieldtype": "Check",
+   "label": "Charged Over Limit"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_soc_percent",
+   "fieldtype": "Int",
+   "label": "Start SOC (%)"
+  },
+  {
+   "fieldname": "end_soc_percent",
+   "fieldtype": "Int",
+   "label": "End SOC (%)"
+  },
+  {
+   "fieldname": "start_range_km",
+   "fieldtype": "Int",
+   "label": "Start Range (km)"
+  },
+  {
+   "fieldname": "end_range_km",
+   "fieldtype": "Int",
+   "label": "End Range (km)"
+  },
+  {
+   "fieldname": "section_location",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude",
+   "precision": "6"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude",
+   "precision": "6"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  }
+ ],
+ "links": [],
+ "modified": "2026-01-29 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Yeshugo Erpnext",
+ "name": "YesHugo Charge Session",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

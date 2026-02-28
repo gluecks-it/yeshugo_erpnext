@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "autoname": "field:vehicle_id",
+ "creation": "2026-01-10 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle_id",
+  "license_plate",
+  "description",
+  "column_break_1",
+  "last_update",
+  "archived",
+  "section_status",
+  "current_odometer",
+  "current_odometer_date",
+  "column_break_2",
+  "tank_capacity",
+  "average_fuel_consumption",
+  "section_location",
+  "current_latitude",
+  "current_longitude"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vehicle ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "license_plate",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "License Plate"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_update",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Last Update",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "archived",
+   "fieldtype": "Check",
+   "label": "Archived",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Current Status"
+  },
+  {
+   "description": "Current odometer reading in km",
+   "fieldname": "current_odometer",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Odometer (km)",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_odometer_date",
+   "fieldtype": "Datetime",
+   "label": "Odometer Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Tank capacity in liters",
+   "fieldname": "tank_capacity",
+   "fieldtype": "Float",
+   "label": "Tank Capacity (L)",
+   "precision": "1"
+  },
+  {
+   "description": "Average fuel consumption in L/100km",
+   "fieldname": "average_fuel_consumption",
+   "fieldtype": "Float",
+   "label": "Avg. Consumption (L/100km)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_location",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "current_latitude",
+   "fieldtype": "Float",
+   "label": "Latitude",
+   "precision": "6",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_longitude",
+   "fieldtype": "Float",
+   "label": "Longitude",
+   "precision": "6",
+   "read_only": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-01-10 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Yeshugo Erpnext",
+ "name": "YesHugo Vehicle",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

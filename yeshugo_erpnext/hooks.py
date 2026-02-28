@@ -137,34 +137,23 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Timesheet": {
+		"on_trash": "yeshugo_erpnext.yeshugo_erpnext.doctype.yeshugo_trip.yeshugo_trip.on_timesheet_delete"
+	},
+	"Delivery Note": {
+		"on_trash": "yeshugo_erpnext.yeshugo_erpnext.doctype.yeshugo_trip.yeshugo_trip.on_delivery_note_delete"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"yeshugo_erpnext.tasks.all"
-# 	],
-# 	"daily": [
-# 		"yeshugo_erpnext.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"yeshugo_erpnext.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"yeshugo_erpnext.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"yeshugo_erpnext.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"daily": [
+		"yeshugo_erpnext.yeshugo_erpnext.doctype.yeshugo_settings.yeshugo_api.scheduled_sync"
+	]
+}
 
 # Testing
 # -------

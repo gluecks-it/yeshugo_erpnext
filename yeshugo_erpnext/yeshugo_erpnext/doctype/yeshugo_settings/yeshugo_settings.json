@@ -1,0 +1,143 @@
+{
+ "actions": [],
+ "creation": "2026-01-10 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "section_credentials",
+  "api_key",
+  "column_break_credentials",
+  "x_token",
+  "section_home",
+  "home_latitude",
+  "home_longitude",
+  "home_radius",
+  "section_timesheet",
+  "default_activity_type",
+  "section_sync",
+  "auto_sync_enabled",
+  "last_sync",
+  "sync_status",
+  "sync_log"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "section_credentials",
+   "fieldtype": "Section Break",
+   "label": "API Credentials"
+  },
+  {
+   "description": "JWT Token von api.yeshugo.com (läuft nach einigen Minuten ab, nur für manuelle Sync)",
+   "fieldname": "api_key",
+   "fieldtype": "Password",
+   "label": "JWT Token"
+  },
+  {
+   "fieldname": "column_break_credentials",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Persistenter X-Token (bleibt dauerhaft gültig, ermöglicht Auto-Sync)",
+   "fieldname": "x_token",
+   "fieldtype": "Password",
+   "label": "X-Token"
+  },
+  {
+   "fieldname": "section_home",
+   "fieldtype": "Section Break",
+   "label": "Home Location"
+  },
+  {
+   "description": "Latitude of home location (e.g. 51.1234)",
+   "fieldname": "home_latitude",
+   "fieldtype": "Float",
+   "label": "Home Latitude",
+   "precision": "6"
+  },
+  {
+   "description": "Longitude of home location (e.g. 7.5678)",
+   "fieldname": "home_longitude",
+   "fieldtype": "Float",
+   "label": "Home Longitude",
+   "precision": "6"
+  },
+  {
+   "default": "100",
+   "description": "Radius in meters to consider as 'at home'",
+   "fieldname": "home_radius",
+   "fieldtype": "Int",
+   "label": "Home Radius (m)"
+  },
+  {
+   "fieldname": "section_timesheet",
+   "fieldtype": "Section Break",
+   "label": "Timesheet Defaults"
+  },
+  {
+   "description": "Standard-Tätigkeitsart für Timesheet-Einträge",
+   "fieldname": "default_activity_type",
+   "fieldtype": "Link",
+   "label": "Standard Tätigkeitsart",
+   "options": "Activity Type"
+  },
+  {
+   "fieldname": "section_sync",
+   "fieldtype": "Section Break",
+   "label": "Synchronization"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_sync_enabled",
+   "fieldtype": "Check",
+   "label": "Auto Sync Enabled"
+  },
+  {
+   "fieldname": "last_sync",
+   "fieldtype": "Datetime",
+   "label": "Last Sync",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sync_status",
+   "fieldtype": "Small Text",
+   "label": "Sync Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sync_log",
+   "fieldtype": "Long Text",
+   "hidden": 1,
+   "label": "Sync Log",
+   "read_only": 1
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-01-10 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Yeshugo Erpnext",
+ "name": "YesHugo Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

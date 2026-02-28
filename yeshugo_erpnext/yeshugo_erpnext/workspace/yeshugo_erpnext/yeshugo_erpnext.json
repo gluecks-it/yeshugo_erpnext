@@ -1,0 +1,100 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"yh_header_1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>YesHugo</b></span>\",\"col\":12}},{\"id\":\"yh_card_1\",\"type\":\"card\",\"data\":{\"card_name\":\"Einstellungen\",\"col\":4}},{\"id\":\"yh_card_2\",\"type\":\"card\",\"data\":{\"card_name\":\"Fahrzeuge & Fahrten\",\"col\":4}},{\"id\":\"yh_card_3\",\"type\":\"card\",\"data\":{\"card_name\":\"Ladevorg\\u00e4nge\",\"col\":4}},{\"id\":\"yh_shortcut_1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"YesHugo Trips\",\"col\":4}}]",
+ "creation": "2026-02-25 10:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "fa fa-car",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "YesHugo",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Einstellungen",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "YesHugo Settings",
+   "link_count": 0,
+   "link_to": "YesHugo Settings",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fahrzeuge & Fahrten",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "YesHugo Vehicle",
+   "link_count": 0,
+   "link_to": "YesHugo Vehicle",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "YesHugo Trip",
+   "link_count": 0,
+   "link_to": "YesHugo Trip",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Ladevorg\u00e4nge",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "YesHugo Charge Session",
+   "link_count": 0,
+   "link_to": "YesHugo Charge Session",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-25 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Yeshugo Erpnext",
+ "name": "YesHugo",
+ "number_cards": [],
+ "onboarding": "",
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 50.0,
+ "shortcuts": [
+  {
+   "label": "YesHugo Trips",
+   "link_to": "yeshugo-trips",
+   "type": "Page"
+  }
+ ],
+ "title": "YesHugo"
+}

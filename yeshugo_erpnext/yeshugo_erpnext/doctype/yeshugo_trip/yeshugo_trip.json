@@ -1,0 +1,295 @@
+{
+ "actions": [],
+ "autoname": "format:TRIP-{vehicle}-{####}",
+ "creation": "2026-01-10 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle",
+  "external_id",
+  "status",
+  "reason",
+  "column_break_1",
+  "start_time",
+  "end_time",
+  "receiving_data",
+  "section_billing",
+  "timesheet",
+  "timesheet_detail",
+  "billed",
+  "column_break_billing",
+  "delivery_note",
+  "section_distance",
+  "start_odometer",
+  "end_odometer",
+  "distance",
+  "column_break_2",
+  "duration_minutes",
+  "business_distance",
+  "private_distance",
+  "commute_distance",
+  "section_location",
+  "start_latitude",
+  "start_longitude",
+  "start_address",
+  "column_break_3",
+  "end_latitude",
+  "end_longitude",
+  "end_address",
+  "section_details",
+  "comment",
+  "driver",
+  "section_segments",
+  "segments"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Vehicle",
+   "options": "YesHugo Vehicle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "external_id",
+   "fieldtype": "Data",
+   "label": "External ID",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "default": "In Progress",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "In Progress\nCompleted"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Reason",
+   "options": "\nPRIVATE\nBUSINESS\nCOMMUTE\nCORRECTION"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "End Time"
+  },
+  {
+   "default": "0",
+   "description": "Whether the trip is currently receiving data",
+   "fieldname": "receiving_data",
+   "fieldtype": "Check",
+   "label": "Receiving Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_billing",
+   "fieldtype": "Section Break",
+   "label": "Abrechnung"
+  },
+  {
+   "fieldname": "timesheet",
+   "fieldtype": "Link",
+   "label": "Timesheet",
+   "options": "Timesheet",
+   "read_only": 1
+  },
+  {
+   "fieldname": "timesheet_detail",
+   "fieldtype": "Data",
+   "label": "Timesheet Detail",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "billed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Abgerechnet",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_billing",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_note",
+   "fieldtype": "Link",
+   "label": "Delivery Note",
+   "options": "Delivery Note",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_distance",
+   "fieldtype": "Section Break",
+   "label": "Distance & Duration"
+  },
+  {
+   "description": "Odometer at start in km",
+   "fieldname": "start_odometer",
+   "fieldtype": "Float",
+   "label": "Start Odometer (km)",
+   "precision": "1"
+  },
+  {
+   "description": "Odometer at end in km",
+   "fieldname": "end_odometer",
+   "fieldtype": "Float",
+   "label": "End Odometer (km)",
+   "precision": "1"
+  },
+  {
+   "description": "Total distance in km",
+   "fieldname": "distance",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Distance (km)",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Total duration from start to end",
+   "fieldname": "duration_minutes",
+   "fieldtype": "Int",
+   "label": "Duration (min)",
+   "read_only": 1
+  },
+  {
+   "description": "Business distance in km",
+   "fieldname": "business_distance",
+   "fieldtype": "Float",
+   "label": "Business Distance (km)",
+   "precision": "1"
+  },
+  {
+   "description": "Private distance in km",
+   "fieldname": "private_distance",
+   "fieldtype": "Float",
+   "label": "Private Distance (km)",
+   "precision": "1"
+  },
+  {
+   "description": "Commute distance in km",
+   "fieldname": "commute_distance",
+   "fieldtype": "Float",
+   "label": "Commute Distance (km)",
+   "precision": "1"
+  },
+  {
+   "fieldname": "section_location",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "start_latitude",
+   "fieldtype": "Float",
+   "label": "Start Latitude",
+   "precision": "6"
+  },
+  {
+   "fieldname": "start_longitude",
+   "fieldtype": "Float",
+   "label": "Start Longitude",
+   "precision": "6"
+  },
+  {
+   "fieldname": "start_address",
+   "fieldtype": "Small Text",
+   "label": "Start Address"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "end_latitude",
+   "fieldtype": "Float",
+   "label": "End Latitude",
+   "precision": "6"
+  },
+  {
+   "fieldname": "end_longitude",
+   "fieldtype": "Float",
+   "label": "End Longitude",
+   "precision": "6"
+  },
+  {
+   "fieldname": "end_address",
+   "fieldtype": "Small Text",
+   "label": "End Address"
+  },
+  {
+   "fieldname": "section_details",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Small Text",
+   "label": "Comment"
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Data",
+   "label": "Driver"
+  },
+  {
+   "fieldname": "section_segments",
+   "fieldtype": "Section Break",
+   "label": "Trip Segments"
+  },
+  {
+   "fieldname": "segments",
+   "fieldtype": "Table",
+   "label": "Segments",
+   "options": "YesHugo Trip Segment"
+  }
+ ],
+ "links": [],
+ "modified": "2026-01-10 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Yeshugo Erpnext",
+ "name": "YesHugo Trip",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
