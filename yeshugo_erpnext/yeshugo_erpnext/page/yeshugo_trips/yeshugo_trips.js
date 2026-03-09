@@ -14,7 +14,9 @@ class YesHugoTripsPage {
 		this.settings = null;
 		this.activity_types = [];
 		this.current_employee = null;
+		this.vehicles = [];
 		this.ready = false;
+		this._request_id = 0;
 		this.make_filters();
 		this.make_content();
 		this.bind_week_navigation();
@@ -29,7 +31,8 @@ class YesHugoTripsPage {
 		await Promise.all([
 			this.load_settings(),
 			this.load_activity_types(),
-			this.load_current_employee()
+			this.load_current_employee(),
+			this.load_vehicles()
 		]);
 	}
 
@@ -70,12 +73,27 @@ class YesHugoTripsPage {
 	}
 
 	make_filters() {
-		// Vehicle Filter
+		// Employee Filter
+		this.employee_field = this.page.add_field({
+			fieldname: 'employee',
+			label: __('Mitarbeiter'),
+			fieldtype: 'Link',
+			options: 'Employee',
+			change: () => {
+				this.current_employee = this.employee_field.get_value()
+					? { name: this.employee_field.get_value() }
+					: null;
+				this.render_employee_info();
+				this.refresh_data();
+			}
+		});
+
+		// Vehicle Filter (Kennzeichen)
 		this.vehicle_field = this.page.add_field({
 			fieldname: 'vehicle',
-			label: __('Fahrzeug'),
-			fieldtype: 'Link',
-			options: 'YesHugo Vehicle',
+			label: __('Kennzeichen'),
+			fieldtype: 'Select',
+			options: [{ label: __('Alle Fahrzeuge'), value: '' }],
 			change: () => this.refresh_data()
 		});
 
@@ -1350,9 +1368,34 @@ class YesHugoTripsPage {
 				method: 'yeshugo_erpnext.yeshugo_erpnext.page.yeshugo_trips.yeshugo_trips.get_current_employee'
 			});
 			this.current_employee = result.message;
+			// Set the employee field to the current user's employee
+			if (this.current_employee) {
+				this.employee_field.set_value(this.current_employee.name);
+			}
 			this.render_employee_info();
 		} catch (error) {
 			console.error('Error loading employee:', error);
+		}
+	}
+
+	async load_vehicles() {
+		try {
+			const result = await frappe.call({
+				method: 'yeshugo_erpnext.yeshugo_erpnext.page.yeshugo_trips.yeshugo_trips.get_vehicles'
+			});
+			this.vehicles = result.message || [];
+			// Populate vehicle select field
+			const options = [{ label: __('Alle Fahrzeuge'), value: '' }];
+			for (const v of this.vehicles) {
+				options.push({
+					label: v.license_plate + (v.description ? ` (${v.description})` : ''),
+					value: v.vehicle_id
+				});
+			}
+			this.vehicle_field.df.options = options;
+			this.vehicle_field.refresh();
+		} catch (error) {
+			console.error('Error loading vehicles:', error);
 		}
 	}
 
@@ -1374,11 +1417,12 @@ class YesHugoTripsPage {
 	render_employee_info() {
 		const container = this.page.main.find('.employee-info-container');
 		const infoSpan = container.find('.employee-info');
+		const employeeValue = this.employee_field.get_value();
 
-		if (!this.current_employee) {
+		if (!employeeValue) {
 			container.show();
 			infoSpan.html(
-				`<span class="text-danger">${__('Kein Mitarbeiter-Datensatz gefunden. Timesheet-Übertragung nicht möglich.')}</span>`
+				`<span class="text-danger">${__('Kein Mitarbeiter ausgewählt. Timesheet-Übertragung nicht möglich.')}</span>`
 			);
 		} else {
 			container.hide();
@@ -1391,6 +1435,8 @@ class YesHugoTripsPage {
 
 	async refresh_data() {
 		if (!this.ready) return;
+
+		const request_id = ++this._request_id;
 		const container = this.page.main.find('.trips-data-container');
 		container.html(`<div class="loading-indicator"><i class="fa fa-spinner fa-spin"></i> ${__('Lade Daten...')}</div>`);
 
@@ -1400,9 +1446,13 @@ class YesHugoTripsPage {
 				args: {
 					vehicle: this.vehicle_field.get_value() || null,
 					from_date: this.from_date_field.get_value() || null,
-					to_date: this.to_date_field.get_value() || null
+					to_date: this.to_date_field.get_value() || null,
+					employee: this.employee_field.get_value() || null
 				}
 			});
+
+			// Discard stale responses
+			if (request_id !== this._request_id) return;
 
 			const data = result.message;
 			this.update_summary_cards(data);
@@ -1414,6 +1464,7 @@ class YesHugoTripsPage {
 				this.render_detail_view(data);
 			}
 		} catch (error) {
+			if (request_id !== this._request_id) return;
 			console.error('Error loading trips:', error);
 			container.html(`<div class="empty-state"><i class="fa fa-exclamation-circle"></i><br>${__('Fehler beim Laden der Daten')}</div>`);
 		}
@@ -1796,14 +1847,16 @@ class YesHugoTripsPage {
 													${stop.location}
 												</div>
 												<div class="stop-content">
-													${trip.timesheet ? `<div class="billed-info" style="margin: 0;">
-														<i class="fa fa-file-text-o"></i>
-														<a href="/app/timesheet/${trip.timesheet}" target="_blank">${trip.timesheet}</a>
-													</div>` : ''}
-													${trip.delivery_note ? `<div class="billed-info" style="margin: ${trip.timesheet ? '6px' : '0'} 0 0 0;">
-														<i class="fa fa-truck"></i>
-														<a href="/app/delivery-note/${trip.delivery_note}" target="_blank">${trip.delivery_note}</a>
-													</div>` : ''}
+													<div class="stop-links">
+														${trip.timesheet ? `<div class="billed-info" style="margin: 0;">
+															<i class="fa fa-file-text-o"></i>
+															<a href="/app/timesheet/${trip.timesheet}" target="_blank">${trip.timesheet}</a>
+														</div>` : ''}
+														${trip.delivery_note ? `<div class="billed-info" style="margin: ${trip.timesheet ? '6px' : '0'} 0 0 0;">
+															<i class="fa fa-truck"></i>
+															<a href="/app/delivery-note/${trip.delivery_note}" target="_blank">${trip.delivery_note}</a>
+														</div>` : ''}
+													</div>
 													${hasCoords ? `
 													<div class="stop-map-container" style="height: 150px;">
 														<iframe src="${mapUrl}" loading="lazy"></iframe>
@@ -2966,7 +3019,8 @@ class YesHugoTripsPage {
 						is_billable: isBillable,
 						project: project || null,
 						trip_name: tripName,
-						linked_trips: linkedTrips.length > 0 ? JSON.stringify(linkedTrips) : null
+						linked_trips: linkedTrips.length > 0 ? JSON.stringify(linkedTrips) : null,
+						employee: this.employee_field.get_value() || null
 					}
 				});
 

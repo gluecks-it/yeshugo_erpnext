@@ -162,7 +162,7 @@ def get_charge_sessions(vehicle=None, from_date=None, to_date=None):
 
 
 @frappe.whitelist()
-def get_trips_overview(vehicle=None, from_date=None, to_date=None):
+def get_trips_overview(vehicle=None, from_date=None, to_date=None, employee=None):
 	"""
 	Get trips overview with time calculations for stops outside home location.
 
@@ -170,7 +170,20 @@ def get_trips_overview(vehicle=None, from_date=None, to_date=None):
 	- All trips for the day
 	- Time spent at stops outside home location (time between end of one trip and start of next)
 	- Information about whether a stop is at a charging station
+
+	Args:
+		employee: Optional Employee name. If provided, checks ERPNext permissions
+		         and filters trips by this employee's linked vehicles/driver field.
 	"""
+	# Permission check: if employee is specified, verify the current user has
+	# permission to view that employee's data
+	if employee:
+		if not frappe.has_permission("Employee", doc=employee, ptype="read"):
+			frappe.throw(
+				_("You do not have permission to view data for this employee."),
+				frappe.PermissionError
+			)
+
 	settings = frappe.get_single("YesHugo Settings")
 	home_lat = settings.home_latitude
 	home_lon = settings.home_longitude
@@ -462,10 +475,11 @@ def add_timesheet_entry(
 	is_billable=1,
 	project=None,
 	trip_name=None,
-	linked_trips=None
+	linked_trips=None,
+	employee=None
 ):
 	"""
-	Add a timesheet entry for the current user's employee.
+	Add a timesheet entry for the specified or current user's employee.
 
 	1. Find an existing draft timesheet for the customer or create a new one
 	2. Add a new time log row
@@ -478,11 +492,26 @@ def add_timesheet_entry(
 		duration_hours: Duration in hours (e.g. 2.5 for 2h 30m)
 		trip_name: Optional YesHugo Trip name to mark as billed
 		linked_trips: Optional list of additional trip names to link to the same timesheet
+		employee: Optional Employee name. If provided, uses this employee instead of the current user's.
 	"""
-	# Get current employee
-	employee = get_current_employee()
-	if not employee:
-		frappe.throw(_("No active employee record found for current user"))
+	# Get employee - use provided employee or fall back to current user's employee
+	if employee:
+		# Check permission for the specified employee
+		if not frappe.has_permission("Employee", doc=employee, ptype="read"):
+			frappe.throw(_("You do not have permission to create timesheets for this employee."),
+				frappe.PermissionError)
+		emp_data = frappe.db.get_value(
+			"Employee", employee,
+			["name", "employee_name", "company"],
+			as_dict=True
+		)
+		if not emp_data:
+			frappe.throw(_("Employee {0} not found").format(employee))
+		employee = emp_data
+	else:
+		employee = get_current_employee()
+		if not employee:
+			frappe.throw(_("No active employee record found for current user"))
 
 	# Get employee doc for company info
 	emp = frappe.get_doc("Employee", employee.name)

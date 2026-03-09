@@ -1,13 +1,13 @@
 {
  "charts": [],
- "content": "[{\"id\":\"yh_header_1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>YesHugo</b></span>\",\"col\":12}},{\"id\":\"yh_card_1\",\"type\":\"card\",\"data\":{\"card_name\":\"Einstellungen\",\"col\":4}},{\"id\":\"yh_card_2\",\"type\":\"card\",\"data\":{\"card_name\":\"Fahrzeuge & Fahrten\",\"col\":4}},{\"id\":\"yh_card_3\",\"type\":\"card\",\"data\":{\"card_name\":\"Ladevorg\\u00e4nge\",\"col\":4}},{\"id\":\"yh_shortcut_1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"YesHugo Trips\",\"col\":4}}]",
+ "content": "[{\"id\":\"yh_header_1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>YesHugo</b></span>\",\"col\":12}},{\"id\":\"yh_card_1\",\"type\":\"card\",\"data\":{\"card_name\":\"Einstellungen\",\"col\":4}},{\"id\":\"yh_card_2\",\"type\":\"card\",\"data\":{\"card_name\":\"Fahrzeuge & Fahrten\",\"col\":4}},{\"id\":\"yh_card_3\",\"type\":\"card\",\"data\":{\"card_name\":\"Ladevorg\\u00e4nge\",\"col\":4}},{\"id\":\"yh_shortcut_1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"YesHugo Trips\",\"col\":4}},{\"id\":\"yh_shortcut_2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"YesHugo Travel Expenses\",\"col\":4}}]",
  "creation": "2026-02-25 10:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 0,
- "icon": "fa fa-car",
+ "icon": "map",
  "idx": 0,
  "is_hidden": 0,
  "label": "YesHugo",
@@ -77,7 +77,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-02-25 10:00:00.000000",
+ "modified": "2026-03-09 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Yeshugo Erpnext",
  "name": "YesHugo",
@@ -93,6 +93,11 @@
   {
    "label": "YesHugo Trips",
    "link_to": "yeshugo-trips",
+   "type": "Page"
+  },
+  {
+   "label": "YesHugo Travel Expenses",
+   "link_to": "yeshugo-travel-expenses",
    "type": "Page"
   }
  ],

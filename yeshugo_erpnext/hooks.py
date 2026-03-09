@@ -149,6 +149,8 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
+after_migrate = ["yeshugo_erpnext.setup.after_migrate"]
+
 scheduler_events = {
 	"daily": [
 		"yeshugo_erpnext.yeshugo_erpnext.doctype.yeshugo_settings.yeshugo_api.scheduled_sync"
