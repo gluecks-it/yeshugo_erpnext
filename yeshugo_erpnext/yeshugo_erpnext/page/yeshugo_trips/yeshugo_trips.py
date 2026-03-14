@@ -58,7 +58,7 @@ def format_duration(seconds):
 @frappe.whitelist()
 def get_settings():
 	"""Get YesHugo settings for the frontend."""
-	settings = frappe.get_single("YesHugo Settings")
+	settings = frappe.get_doc("YesHugo Settings", "YesHugo Settings", ignore_permissions=True)
 	return {
 		"home_latitude": settings.home_latitude,
 		"home_longitude": settings.home_longitude,
@@ -70,14 +70,34 @@ def get_settings():
 
 @frappe.whitelist()
 def get_vehicles():
-	"""Get list of vehicles for filter."""
+	"""Get list of vehicles visible to the current user.
+
+	Fleet Manager sees all vehicles.
+	Other users see vehicles with no employee or assigned to them.
+	"""
 	vehicles = frappe.get_all(
 		"YesHugo Vehicle",
 		filters={"archived": 0},
-		fields=["vehicle_id", "license_plate", "description"],
-		order_by="license_plate"
+		fields=["vehicle_id", "license_plate", "description", "employee"],
+		order_by="license_plate",
+		ignore_permissions=True
 	)
-	return vehicles
+
+	roles = frappe.get_roles()
+
+	# Fleet Manager and System Manager see everything
+	if "Fleet Manager" in roles or "System Manager" in roles:
+		return vehicles
+
+	employee = get_current_employee()
+	employee_name = employee.get("name") if employee else None
+
+	# Pool Vehicle User sees unassigned (pool) vehicles + own vehicle
+	if "Pool Vehicle User" in roles:
+		return [v for v in vehicles if not v.employee or v.employee == employee_name]
+
+	# Everyone else sees only their own assigned vehicle
+	return [v for v in vehicles if v.employee == employee_name]
 
 
 def is_charging_during_stop(stop_start, stop_end, charge_sessions, vehicle_id):
@@ -155,7 +175,8 @@ def get_charge_sessions(vehicle=None, from_date=None, to_date=None):
 			"start_soc_percent", "end_soc_percent",
 			"latitude", "longitude", "address"
 		],
-		order_by="plugged_in_at desc"
+		order_by="plugged_in_at desc",
+		ignore_permissions=True
 	)
 
 	return sessions
@@ -184,7 +205,7 @@ def get_trips_overview(vehicle=None, from_date=None, to_date=None, employee=None
 				frappe.PermissionError
 			)
 
-	settings = frappe.get_single("YesHugo Settings")
+	settings = frappe.get_doc("YesHugo Settings", "YesHugo Settings", ignore_permissions=True)
 	home_lat = settings.home_latitude
 	home_lon = settings.home_longitude
 	home_radius = settings.home_radius or 100
@@ -225,7 +246,8 @@ def get_trips_overview(vehicle=None, from_date=None, to_date=None, employee=None
 			"business_distance", "private_distance", "commute_distance",
 			"comment", "driver", "billed", "timesheet", "delivery_note"
 		],
-		order_by="start_time asc"
+		order_by="start_time asc",
+		ignore_permissions=True
 	)
 
 	# Get charge sessions for the date range (all vehicles if no filter)
@@ -240,12 +262,13 @@ def get_trips_overview(vehicle=None, from_date=None, to_date=None, employee=None
 		filters=charge_session_filters,
 		fields=["name", "vehicle", "plugged_in_at", "unplugged_at", "charged_kwh",
 				"latitude", "longitude", "address", "charge_type",
-				"start_soc_percent", "end_soc_percent"]
+				"start_soc_percent", "end_soc_percent"],
+		ignore_permissions=True
 	)
 
 	# Get vehicle info
 	vehicle_info = {}
-	for v in frappe.get_all("YesHugo Vehicle", fields=["vehicle_id", "license_plate"]):
+	for v in frappe.get_all("YesHugo Vehicle", fields=["vehicle_id", "license_plate"], ignore_permissions=True):
 		vehicle_info[v.vehicle_id] = v.license_plate
 
 	# Group trips by day and vehicle

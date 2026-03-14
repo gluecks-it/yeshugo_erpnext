@@ -84,18 +84,19 @@ class YesHugoTripsPage {
 					? { name: this.employee_field.get_value() }
 					: null;
 				this.render_employee_info();
+
+				// Re-render vehicle buttons (filters by employee) and auto-select
+				this.selected_vehicle = null;
+				if (this.vehicles) {
+					this.render_vehicle_buttons();
+				}
+
 				this.refresh_data();
 			}
 		});
 
-		// Vehicle Filter (Kennzeichen)
-		this.vehicle_field = this.page.add_field({
-			fieldname: 'vehicle',
-			label: __('Kennzeichen'),
-			fieldtype: 'Select',
-			options: [{ label: __('Alle Fahrzeuge'), value: '' }],
-			change: () => this.refresh_data()
-		});
+		// Vehicle selection is handled via buttons in make_content()
+		this.selected_vehicle = null;
 
 		// Date Range - current week (Monday to Sunday)
 		const week = this.get_week_range();
@@ -197,6 +198,9 @@ class YesHugoTripsPage {
 					</div>
 				</div>
 
+				<!-- Vehicle Buttons -->
+				<div class="vehicle-buttons-container mb-4"></div>
+
 				<!-- Week Navigation -->
 				<div class="week-navigation mb-4">
 					<button class="btn btn-default btn-sm btn-prev-week">
@@ -266,6 +270,41 @@ class YesHugoTripsPage {
 			<style>
 				.yeshugo-trips-container {
 					padding: 15px;
+				}
+				.vehicle-buttons-container {
+					display: flex;
+					gap: 8px;
+					flex-wrap: wrap;
+				}
+				.btn-vehicle {
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					padding: 6px 14px;
+					border-radius: 6px;
+					font-size: 13px;
+					font-weight: 500;
+					cursor: pointer;
+					transition: all 0.2s ease;
+					border: 2px solid var(--border-color);
+					background: var(--card-bg);
+					color: var(--text-color);
+				}
+				.btn-vehicle:hover {
+					border-color: var(--primary);
+					background: var(--control-bg);
+				}
+				.btn-vehicle.active {
+					background: var(--primary);
+					border-color: var(--primary);
+					color: #fff;
+				}
+				.btn-vehicle .vehicle-plate {
+					font-weight: 600;
+				}
+				.btn-vehicle .vehicle-desc {
+					font-weight: 400;
+					opacity: 0.8;
 				}
 				.week-navigation {
 					display: flex;
@@ -1384,18 +1423,52 @@ class YesHugoTripsPage {
 				method: 'yeshugo_erpnext.yeshugo_erpnext.page.yeshugo_trips.yeshugo_trips.get_vehicles'
 			});
 			this.vehicles = result.message || [];
-			// Populate vehicle select field
-			const options = [{ label: __('Alle Fahrzeuge'), value: '' }];
-			for (const v of this.vehicles) {
-				options.push({
-					label: v.license_plate + (v.description ? ` (${v.description})` : ''),
-					value: v.vehicle_id
-				});
-			}
-			this.vehicle_field.df.options = options;
-			this.vehicle_field.refresh();
+			this.render_vehicle_buttons();
 		} catch (error) {
 			console.error('Error loading vehicles:', error);
+		}
+	}
+
+	render_vehicle_buttons() {
+		const container = this.page.main.find('.vehicle-buttons-container');
+		const currentEmployee = this.employee_field.get_value();
+
+		let html = '';
+		for (const v of this.vehicles) {
+			const isActive = this.selected_vehicle === v.vehicle_id ? ' active' : '';
+			const desc = v.description ? `<span class="vehicle-desc">(${v.description})</span>` : '';
+			html += `<button class="btn-vehicle${isActive}" data-vehicle-id="${v.vehicle_id}">
+				<i class="fa fa-car"></i>
+				<span class="vehicle-plate">${v.license_plate}</span>
+				${desc}
+			</button>`;
+		}
+		container.html(html);
+
+		// Bind click events
+		container.find('.btn-vehicle').on('click', (e) => {
+			const btn = $(e.currentTarget);
+			const vehicleId = btn.data('vehicle-id');
+
+			if (this.selected_vehicle === vehicleId) {
+				// Deselect - show all
+				this.selected_vehicle = null;
+				container.find('.btn-vehicle').removeClass('active');
+			} else {
+				this.selected_vehicle = vehicleId;
+				container.find('.btn-vehicle').removeClass('active');
+				btn.addClass('active');
+			}
+			this.refresh_data();
+		});
+
+		// Auto-select vehicle assigned to current employee
+		if (currentEmployee && !this.selected_vehicle) {
+			const assignedVehicle = this.vehicles.find(v => v.employee === currentEmployee);
+			if (assignedVehicle) {
+				this.selected_vehicle = assignedVehicle.vehicle_id;
+				container.find(`[data-vehicle-id="${assignedVehicle.vehicle_id}"]`).addClass('active');
+			}
 		}
 	}
 
@@ -1444,7 +1517,7 @@ class YesHugoTripsPage {
 			const result = await frappe.call({
 				method: 'yeshugo_erpnext.yeshugo_erpnext.page.yeshugo_trips.yeshugo_trips.get_trips_overview',
 				args: {
-					vehicle: this.vehicle_field.get_value() || null,
+					vehicle: this.selected_vehicle || null,
 					from_date: this.from_date_field.get_value() || null,
 					to_date: this.to_date_field.get_value() || null,
 					employee: this.employee_field.get_value() || null
@@ -3020,7 +3093,7 @@ class YesHugoTripsPage {
 						project: project || null,
 						trip_name: tripName,
 						linked_trips: linkedTrips.length > 0 ? JSON.stringify(linkedTrips) : null,
-						employee: this.employee_field.get_value() || null
+						employee: self.employee_field.get_value() || null
 					}
 				});
 

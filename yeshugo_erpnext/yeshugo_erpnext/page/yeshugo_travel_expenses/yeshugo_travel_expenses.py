@@ -40,13 +40,30 @@ def get_current_employee():
 
 @frappe.whitelist()
 def get_vehicles():
+	"""Get list of vehicles visible to the current user."""
 	vehicles = frappe.get_all(
 		"YesHugo Vehicle",
 		filters={"archived": 0},
-		fields=["vehicle_id", "license_plate", "description"],
-		order_by="license_plate"
+		fields=["vehicle_id", "license_plate", "description", "employee"],
+		order_by="license_plate",
+		ignore_permissions=True
 	)
-	return vehicles
+
+	roles = frappe.get_roles()
+
+	# Fleet Manager and System Manager see everything
+	if "Fleet Manager" in roles or "System Manager" in roles:
+		return vehicles
+
+	employee = get_current_employee()
+	employee_name = employee.get("name") if employee else None
+
+	# Pool Vehicle User sees unassigned (pool) vehicles + own vehicle
+	if "Pool Vehicle User" in roles:
+		return [v for v in vehicles if not v.employee or v.employee == employee_name]
+
+	# Everyone else sees only their own assigned vehicle
+	return [v for v in vehicles if v.employee == employee_name]
 
 
 @frappe.whitelist()
@@ -73,7 +90,7 @@ def get_travel_expenses(month=None, year=None, vehicle=None, employee=None,
 				frappe.PermissionError
 			)
 
-	settings = frappe.get_single("YesHugo Settings")
+	settings = frappe.get_doc("YesHugo Settings", "YesHugo Settings", ignore_permissions=True)
 	home_lat = settings.home_latitude
 	home_lon = settings.home_longitude
 	home_radius = settings.home_radius or 100
@@ -124,7 +141,7 @@ def get_travel_expenses(month=None, year=None, vehicle=None, employee=None,
 
 	# Get vehicle info
 	vehicle_info = {}
-	for v in frappe.get_all("YesHugo Vehicle", fields=["vehicle_id", "license_plate"]):
+	for v in frappe.get_all("YesHugo Vehicle", fields=["vehicle_id", "license_plate"], ignore_permissions=True):
 		vehicle_info[v.vehicle_id] = v.license_plate
 
 	# Load all customer names for matching against comments
@@ -181,7 +198,16 @@ def get_travel_expenses(month=None, year=None, vehicle=None, employee=None,
 				"is_fallback": is_fallback
 			}
 
-		grouped[group_key]["km"] += trip.distance or 0
+		# Use the distance field matching the reason filter
+		if reason_filter == "BUSINESS":
+			km = trip.business_distance or 0
+		elif reason_filter == "PRIVATE":
+			km = trip.private_distance or 0
+		elif reason_filter == "COMMUTE":
+			km = trip.commute_distance or 0
+		else:
+			km = trip.distance or 0
+		grouped[group_key]["km"] += km
 		grouped[group_key]["trip_count"] += 1
 
 	# Build flat rows sorted by date

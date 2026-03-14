@@ -22,13 +22,25 @@ This app brings YesHugo data into your ERPNext instance. It syncs vehicles, trip
 
 ### Key Features
 
-- **Vehicle Sync**: Import and update vehicle data from YesHugo including odometer, fuel level, and location.
+- **Vehicle Sync**: Import and update vehicle data from YesHugo including odometer, fuel level, and location. Assign vehicles to employees for automatic filtering.
 - **Trip Management**: Sync trips with distance, duration, route segments, and stop times. Classify trips as business or private.
 - **Charge Session Tracking**: Track EV charging sessions including energy consumption, charge type, and SOC percentages.
 - **Timesheet Integration**: Create timesheet entries from trips with a single click. Configurable activity types and automatic employee mapping.
 - **Trip Overview Page**: A dedicated page for reviewing, filtering, and managing trips by vehicle and date range with weekly navigation.
+- **Travel Expenses Page**: Monthly travel expense report with kilometer reimbursement calculation, grouped by customer/destination. Printable layout.
 - **Home Location Detection**: Automatically detect trips starting or ending at a configurable home location.
 - **Scheduled Sync**: Daily background sync keeps your data up to date without manual intervention.
+
+### Roles & Permissions
+
+| Role | Access |
+|---|---|
+| **System Manager** | Full access to all vehicles, trips, and settings |
+| **Fleet Manager** | See all vehicles and trips across all employees |
+| **Pool Vehicle User** | See pool vehicles (no employee assigned) + own vehicle |
+| **Employee** | See only own assigned vehicle |
+
+Vehicles can be assigned to employees via the **Employee** field on the YesHugo Vehicle doctype. Unassigned vehicles are considered pool vehicles and only visible to users with the **Fleet Manager** or **Pool Vehicle User** role.
 
 ### Under the Hood
 
