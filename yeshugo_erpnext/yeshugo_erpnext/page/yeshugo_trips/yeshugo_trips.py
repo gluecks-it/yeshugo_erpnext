@@ -458,29 +458,24 @@ def get_current_employee():
 
 def find_existing_timesheet(customer, employee, date):
 	"""
-	Find an existing draft timesheet for the customer/employee/date combination.
+	Find an existing draft timesheet for the customer/employee combination.
 
 	Returns the timesheet name or None if not found.
 	"""
 	date = getdate(date)
 
-	# Look for existing draft timesheet for this customer and date range
+	# Look for existing draft timesheet for this customer/employee
 	existing = frappe.db.sql("""
 		SELECT name
 		FROM `tabTimesheet`
 		WHERE employee = %(employee)s
 		AND customer = %(customer)s
 		AND docstatus = 0
-		AND (
-			(start_date IS NULL OR start_date <= %(date)s)
-			AND (end_date IS NULL OR end_date >= %(date)s)
-		)
 		ORDER BY modified DESC
 		LIMIT 1
 	""", {
 		"employee": employee,
 		"customer": customer,
-		"date": date
 	}, as_dict=True)
 
 	if existing:

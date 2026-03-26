@@ -575,8 +575,11 @@ def sync_charge_sessions(client, vehicle_ids):
 		sessions_list = client._extract_list(sessions_data)
 
 		for session in sessions_list:
-			if _save_charge_session(session, vehicle_id):
-				sessions_synced += 1
+			try:
+				if _save_charge_session(session, vehicle_id):
+					sessions_synced += 1
+			except Exception as e:
+				frappe.log_error(f"Error saving charge session {session.get('id')} for vehicle {vehicle_id}: {str(e)}", "YesHugo Charge Session Sync")
 
 	frappe.db.commit()
 	return sessions_synced
@@ -603,8 +606,11 @@ def sync_all_trips(client, vehicle_ids):
 				break
 
 			for trip in trips_list:
-				if _save_trip(trip, vehicle_id):
-					trips_synced += 1
+				try:
+					if _save_trip(trip, vehicle_id):
+						trips_synced += 1
+				except Exception as e:
+					frappe.log_error(f"Error saving trip {trip.get('id')} for vehicle {vehicle_id}: {str(e)}", "YesHugo Trip Sync")
 
 			total = client._extract_total(trips_data)
 			if page * 300 >= total:
@@ -636,8 +642,11 @@ def sync_all_charge_sessions(client, vehicle_ids):
 				break
 
 			for session in sessions_list:
-				if _save_charge_session(session, vehicle_id):
-					sessions_synced += 1
+				try:
+					if _save_charge_session(session, vehicle_id):
+						sessions_synced += 1
+				except Exception as e:
+					frappe.log_error(f"Error saving charge session {session.get('id')} for vehicle {vehicle_id}: {str(e)}", "YesHugo Charge Session Sync")
 
 			total = client._extract_total(sessions_data)
 			if page * 300 >= total:
@@ -713,8 +722,11 @@ def sync_trips(client, vehicle_ids):
 		trips_list = client._extract_list(trips_data)
 
 		for trip in trips_list:
-			if _save_trip(trip, vehicle_id):
-				trips_synced += 1
+			try:
+				if _save_trip(trip, vehicle_id):
+					trips_synced += 1
+			except Exception as e:
+				frappe.log_error(f"Error saving trip {trip.get('id')} for vehicle {vehicle_id}: {str(e)}", "YesHugo Trip Sync")
 
 	frappe.db.commit()
 	return trips_synced
