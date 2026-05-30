@@ -48,11 +48,11 @@
   },
   {
    "fetch_from": "employee.company",
+   "fetch_if_empty": 1,
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company",
-   "read_only": 1
+   "options": "Company"
   },
   {
    "fieldname": "column_break_1",
@@ -104,11 +104,11 @@
    "label": "Trips"
   },
   {
+   "description": "Über 'Fahrten holen' füllen; einzelne Zeilen (z. B. auf andere Firma abgerechnet) kannst du löschen.",
    "fieldname": "rows",
    "fieldtype": "Table",
    "label": "Trips",
-   "options": "YesHugo Travel Expense Report Row",
-   "read_only": 1
+   "options": "YesHugo Travel Expense Report Row"
   },
   {
    "fieldname": "amended_from",

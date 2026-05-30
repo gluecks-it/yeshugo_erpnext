@@ -17,10 +17,8 @@ class YesHugoTravelExpenseReport(Document):
 		if self.employee and not self.company:
 			self.company = frappe.db.get_value("Employee", self.employee, "company")
 
-		# On every save of a draft, (re)build the consolidated rows for the period.
-		if self.docstatus == 0:
-			self.fetch_business_trips()
-
+		# Rows are filled explicitly via get_trips() (button), not on every save,
+		# so manual deletions (e.g. lines billed to another company) are kept.
 		self.calculate_totals()
 
 	def calculate_totals(self):
@@ -34,8 +32,16 @@ class YesHugoTravelExpenseReport(Document):
 		self.total_km = total_km
 		self.total_reimbursement = total_reimbursement
 
-	def fetch_business_trips(self):
-		"""Build consolidated rows (per day + customer) from the employee's business trips."""
+	@frappe.whitelist()
+	def get_trips(self):
+		"""(Re)build the consolidated rows (per day + customer) for the period.
+
+		Replaces existing rows; afterwards the user can delete whole lines (e.g. a
+		customer billed to another company) and those deletions are kept on save.
+		"""
+		if not (self.employee and self.from_date and self.to_date):
+			frappe.throw(_("Please set Employee, From Date and To Date first."))
+
 		self.set("rows", [])
 		for (trip_date, customer), group in self._grouped_trips().items():
 			self.append("rows", {
@@ -43,11 +49,12 @@ class YesHugoTravelExpenseReport(Document):
 				"customer": customer,
 				"km": round(group["km"]),
 			})
+		self.calculate_totals()
 
 	def _grouped_trips(self):
 		"""Group the employee's business trips in the period by (date, customer).
 
-		Returns an OrderedDict {(date, customer): {"km": float, "trips": [trip names]}}.
+		Returns OrderedDict {(date, customer): {"km": float, "trips": [trip names]}}.
 		Only the business portion counts (distance minus a recorded private split);
 		trips already locked on another report are skipped.
 		"""
@@ -103,17 +110,17 @@ class YesHugoTravelExpenseReport(Document):
 		return groups
 
 	def on_submit(self):
-		"""Festschreiben: lock every merged trip and stamp it with this report + its line.
-
-		Mirrors the Timesheet pattern (timesheet + timesheet_detail) so each trip
-		records which report and which consolidated line it was merged into.
-		"""
-		row_by_key = {(getdate(r.trip_date), r.customer): r.name for r in self.rows}
+		"""Festschreiben: lock the trips of the kept lines and stamp each with this
+		report + its line (Timesheet / timesheet_detail pattern). Trips of lines the
+		user deleted (e.g. billed to another company) stay free."""
+		row_name_by_key = {(getdate(r.trip_date), r.customer): r.name for r in self.rows}
 		groups = self._grouped_trips()
 
-		# Guard against double-booking
-		for trip_names in groups.values():
-			for name in trip_names["trips"]:
+		# Guard against double-booking (only for kept lines)
+		for key, group in groups.items():
+			if key not in row_name_by_key:
+				continue
+			for name in group["trips"]:
 				locked_on = frappe.db.get_value("YesHugo Trip", name, "travel_expense_report")
 				if locked_on and locked_on != self.name:
 					frappe.throw(
@@ -121,7 +128,9 @@ class YesHugoTravelExpenseReport(Document):
 					)
 
 		for key, group in groups.items():
-			row_name = row_by_key.get(key)
+			row_name = row_name_by_key.get(key)
+			if not row_name:
+				continue  # line was deleted -> leave these trips free
 			for name in group["trips"]:
 				frappe.db.set_value("YesHugo Trip", name, {
 					"travel_expense_report": self.name,
