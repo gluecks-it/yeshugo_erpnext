@@ -19,6 +19,7 @@
   "billed",
   "column_break_billing",
   "delivery_note",
+  "travel_expense_report",
   "section_distance",
   "start_odometer",
   "end_odometer",
@@ -136,6 +137,14 @@
    "fieldtype": "Link",
    "label": "Delivery Note",
    "options": "Delivery Note",
+   "read_only": 1
+  },
+  {
+   "description": "Reisespesenabrechnung, in der diese Fahrt festgeschrieben ist",
+   "fieldname": "travel_expense_report",
+   "fieldtype": "Link",
+   "label": "Reisespesenabrechnung",
+   "options": "YesHugo Travel Expense Report",
    "read_only": 1
   },
   {

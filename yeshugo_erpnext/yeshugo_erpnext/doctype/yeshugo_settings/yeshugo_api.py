@@ -327,7 +327,39 @@ class YesHugoAPIClient:
 		except requests.exceptions.RequestException as e:
 			frappe.log_error(f"Failed to update trip reason {trip_id}: {str(e)}", "YesHugo API")
 			return None
-		
+
+	def update_trip_private_split(self, trip_id, private_distance_m):
+		"""
+		Mark a BUSINESS trip as partially private via PUT /trips/{id}.
+
+		The trip stays reason=BUSINESS; privateDistanceInNonPrivateTrip carries the
+		private portion (in METERS), so YesHugo treats the remainder as business.
+
+		Args:
+			trip_id: The external YesHugo trip ID
+			private_distance_m: Private portion of the trip in METERS (0 = fully business)
+
+		Returns:
+			Updated trip data or None on error
+		"""
+		url = f"{self.BASE_URL}/trips/{trip_id}"
+
+		data = {
+			"reason": "BUSINESS",
+			"businessDistanceInNonBusinessTrip": None,
+			"privateDistanceInNonPrivateTrip": int(round(private_distance_m or 0)),
+			"deviantDistance": 0,
+			"deviantDescription": None
+		}
+
+		try:
+			response = requests.put(url, headers=self._get_headers(), json=data, timeout=30)
+			response.raise_for_status()
+			return response.json()
+		except requests.exceptions.RequestException as e:
+			frappe.log_error(f"Failed to update trip private split {trip_id}: {str(e)}", "YesHugo API")
+			return None
+
 # =============================================================================
 # Helper Functions
 # =============================================================================

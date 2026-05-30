@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "creation": "2026-01-10 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "trip",
+  "trip_date",
+  "customer",
+  "km",
+  "reimbursement"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "trip",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Fahrt",
+   "options": "YesHugo Trip",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "trip_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Datum",
+   "read_only": 1
+  },
+  {
+   "columns": 4,
+   "fieldname": "customer",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Kunden",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "km",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Kilometer",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "reimbursement",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Erstattung",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-10 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Yeshugo Erpnext",
+ "name": "YesHugo Travel Expense Report Row",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

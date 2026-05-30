@@ -267,1096 +267,6 @@ class YesHugoTripsPage {
 				</div>
 			</div>
 
-			<style>
-				.yeshugo-trips-container {
-					padding: 15px;
-				}
-				.vehicle-buttons-container {
-					display: flex;
-					gap: 8px;
-					flex-wrap: wrap;
-				}
-				.btn-vehicle {
-					display: inline-flex;
-					align-items: center;
-					gap: 6px;
-					padding: 6px 14px;
-					border-radius: 6px;
-					font-size: 13px;
-					font-weight: 500;
-					cursor: pointer;
-					transition: all 0.2s ease;
-					border: 2px solid var(--border-color);
-					background: var(--card-bg);
-					color: var(--text-color);
-				}
-				.btn-vehicle:hover {
-					border-color: var(--primary);
-					background: var(--control-bg);
-				}
-				.btn-vehicle.active {
-					background: var(--primary);
-					border-color: var(--primary);
-					color: #fff;
-				}
-				.btn-vehicle .vehicle-plate {
-					font-weight: 600;
-				}
-				.btn-vehicle .vehicle-desc {
-					font-weight: 400;
-					opacity: 0.8;
-				}
-				.week-navigation {
-					display: flex;
-					align-items: center;
-					gap: 12px;
-					flex-wrap: wrap;
-				}
-				.week-label {
-					font-weight: 600;
-					font-size: 15px;
-					min-width: 220px;
-					text-align: center;
-				}
-				.settings-info-container .alert,
-				.employee-info-container .alert {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-					margin-bottom: 0;
-				}
-				.summary-cards-container .row {
-					display: flex;
-					flex-wrap: wrap;
-				}
-				.summary-card {
-					display: flex;
-					align-items: center;
-					padding: 15px;
-					background: var(--card-bg);
-					border: 1px solid var(--border-color);
-					border-radius: 8px;
-					margin-bottom: 10px;
-				}
-				.summary-card.highlight {
-					border-left: 4px solid var(--primary);
-					background: var(--subtle-fg);
-				}
-				.summary-icon {
-					font-size: 24px;
-					color: var(--text-muted);
-					margin-right: 15px;
-				}
-				.summary-card.highlight .summary-icon {
-					color: var(--primary);
-				}
-				.summary-value {
-					font-size: 20px;
-					font-weight: 600;
-				}
-				.summary-label {
-					font-size: 12px;
-					color: var(--text-muted);
-				}
-				.summary-breakdown {
-					display: flex;
-					gap: 12px;
-					margin-top: 4px;
-					font-size: 12px;
-				}
-				.summary-breakdown .km-business {
-					color: #28a745;
-				}
-				.summary-breakdown .km-private {
-					color: #9b59b6;
-				}
-				.summary-breakdown i {
-					margin-right: 3px;
-				}
-				.loading-indicator {
-					padding: 40px;
-					text-align: center;
-					color: var(--text-muted);
-				}
-				.day-card {
-					background: var(--card-bg);
-					border: 1px solid var(--border-color);
-					border-radius: 8px;
-					margin-bottom: 20px;
-					overflow: hidden;
-				}
-				.day-header {
-					background: var(--subtle-fg);
-					padding: 12px 15px;
-					border-bottom: 1px solid var(--border-color);
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-				}
-				.day-date {
-					font-weight: 600;
-					font-size: 16px;
-				}
-				.day-stats {
-					display: flex;
-					gap: 20px;
-					font-size: 13px;
-					color: var(--text-muted);
-				}
-				.day-stat {
-					display: flex;
-					align-items: center;
-					gap: 5px;
-				}
-				.day-stat.highlight {
-					color: var(--primary);
-					font-weight: 500;
-				}
-				.vehicle-section {
-					padding: 15px;
-					border-bottom: 1px solid var(--border-color);
-				}
-				.vehicle-section:last-child {
-					border-bottom: none;
-				}
-				.vehicle-header {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-					margin-bottom: 15px;
-					padding-bottom: 10px;
-					border-bottom: 1px dashed var(--border-color);
-				}
-				.vehicle-plate {
-					font-weight: 600;
-					font-size: 14px;
-					background: var(--primary);
-					color: white;
-					padding: 3px 8px;
-					border-radius: 4px;
-				}
-				.vehicle-stats {
-					font-size: 12px;
-					color: var(--text-muted);
-					display: flex;
-					gap: 15px;
-				}
-				.trips-timeline {
-					position: relative;
-					padding-left: 30px;
-				}
-				.trips-timeline::before {
-					content: '';
-					position: absolute;
-					left: 10px;
-					top: 0;
-					bottom: 0;
-					width: 2px;
-					background: var(--border-color);
-				}
-				.timeline-item {
-					position: relative;
-					padding: 10px 0;
-				}
-				.timeline-item::before {
-					content: '';
-					position: absolute;
-					left: -24px;
-					top: 15px;
-					width: 10px;
-					height: 10px;
-					border-radius: 50%;
-					background: var(--primary);
-					border: 2px solid var(--card-bg);
-				}
-				.timeline-item.private::before {
-					background: #9b59b6;
-				}
-				.timeline-item.stop::before {
-					background: #ffc107;
-				}
-				.timeline-item.stop-home::before {
-					background: #28a745;
-				}
-				.trip-card {
-					background: var(--subtle-fg);
-					border-radius: 6px;
-					padding: 12px;
-				}
-				.trip-card.private {
-					background: rgba(155, 89, 182, 0.1);
-					border-left: 3px solid #9b59b6;
-				}
-				.trip-details {
-					display: flex;
-					align-items: center;
-					gap: 8px;
-					margin-top: 8px;
-				}
-				.reason-badge {
-					display: inline-block;
-					padding: 2px 8px;
-					border-radius: 3px;
-					font-size: 11px;
-					font-weight: 500;
-				}
-				.reason-badge.business {
-					background: rgba(46, 125, 50, 0.15);
-					color: #2e7d32;
-				}
-				.reason-badge.private {
-					background: rgba(155, 89, 182, 0.15);
-					color: #9b59b6;
-				}
-				.reason-badge.commute {
-					background: rgba(255, 152, 0, 0.15);
-					color: #f57c00;
-				}
-				.btn-show-map {
-					background: none;
-					border: 1px solid var(--border-color);
-					border-radius: 4px;
-					padding: 2px 6px;
-					cursor: pointer;
-					color: var(--text-muted);
-					font-size: 12px;
-				}
-				.btn-show-map:hover {
-					background: var(--subtle-fg);
-					color: var(--primary);
-				}
-				.map-popup {
-					position: fixed;
-					top: 0;
-					left: 0;
-					right: 0;
-					bottom: 0;
-					background: rgba(0,0,0,0.5);
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					z-index: 1050;
-				}
-				.map-popup-content {
-					background: var(--card-bg);
-					border-radius: 8px;
-					padding: 15px;
-					width: 90%;
-					max-width: 600px;
-					max-height: 80vh;
-				}
-				.map-popup-header {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					margin-bottom: 10px;
-				}
-				.map-popup-close {
-					background: none;
-					border: none;
-					font-size: 20px;
-					cursor: pointer;
-					color: var(--text-muted);
-				}
-				.map-container {
-					height: 400px;
-					border-radius: 4px;
-					overflow: hidden;
-				}
-				.trip-header {
-					display: flex;
-					justify-content: space-between;
-					align-items: flex-start;
-					margin-bottom: 8px;
-				}
-				.trip-time {
-					font-weight: 500;
-				}
-				.trip-duration {
-					font-size: 12px;
-					color: var(--text-muted);
-				}
-				.trip-distance {
-					font-weight: 600;
-					color: var(--primary);
-				}
-				.trip-route {
-					font-size: 12px;
-					color: var(--text-muted);
-				}
-				.trip-route .fa {
-					margin: 0 5px;
-				}
-				.location-badge {
-					display: inline-block;
-					padding: 2px 6px;
-					border-radius: 3px;
-					font-size: 11px;
-					margin-left: 5px;
-				}
-				.location-badge.home {
-					background: rgba(40, 167, 69, 0.15);
-					color: #28a745;
-				}
-				.location-badge.away {
-					background: rgba(255, 199, 7, 0.15);
-					color: #856404;
-				}
-				.stop-card {
-					background: rgba(255, 193, 7, 0.08);
-					border: 1px solid rgba(255, 193, 7, 0.3);
-					border-left: 4px solid #ffc107;
-					border-radius: 8px;
-					padding: 16px;
-					box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-				}
-				.stop-card.at-home {
-					background: rgba(40, 167, 69, 0.08);
-					border-color: rgba(40, 167, 69, 0.3);
-					border-left-color: #28a745;
-				}
-				.stop-card.transferred {
-					background: rgba(40, 167, 69, 0.08);
-					border-color: rgba(40, 167, 69, 0.3);
-					border-left-color: #28a745;
-				}
-				/* Charging stop styles */
-				.timeline-item.charging::before {
-					background: #17a2b8;
-				}
-				.stop-card.charging {
-					background: rgba(23, 162, 184, 0.08);
-					border-color: rgba(23, 162, 184, 0.3);
-					border-left-color: #17a2b8;
-				}
-				.stop-card.charging .stop-label {
-					color: #17a2b8;
-				}
-				.stop-card.charging .stop-duration {
-					color: #17a2b8;
-				}
-				.charging-info {
-					display: flex;
-					gap: 24px;
-					flex-wrap: wrap;
-					padding: 12px 16px;
-					background: rgba(23, 162, 184, 0.05);
-					border-radius: 6px;
-					margin-bottom: 12px;
-				}
-				.charging-stat {
-					display: flex;
-					align-items: center;
-					gap: 8px;
-				}
-				.charging-stat i {
-					color: #17a2b8;
-					font-size: 14px;
-				}
-				.charging-value {
-					font-weight: 600;
-					color: var(--text-color);
-				}
-				.charging-label {
-					color: var(--text-muted);
-					font-size: 12px;
-				}
-				.stop-header {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					margin-bottom: 12px;
-					padding-bottom: 12px;
-					border-bottom: 1px solid var(--border-color);
-				}
-				.stop-label {
-					font-size: 13px;
-					font-weight: 600;
-					color: #856404;
-					display: flex;
-					align-items: center;
-					gap: 6px;
-				}
-				.stop-card.at-home .stop-label,
-				.stop-card.transferred .stop-label {
-					color: #28a745;
-				}
-				.stop-duration {
-					font-weight: 700;
-					font-size: 16px;
-					color: #856404;
-				}
-				.stop-card.at-home .stop-duration,
-				.stop-card.transferred .stop-duration {
-					color: #28a745;
-				}
-				.stop-location {
-					font-size: 12px;
-					color: var(--text-muted);
-					margin-bottom: 16px;
-					display: flex;
-					align-items: center;
-					gap: 8px;
-				}
-				.stop-location i {
-					color: var(--text-light);
-				}
-				/* Two Column Layout for Stop */
-				.stop-content {
-					display: grid;
-					grid-template-columns: 1fr 350px;
-					gap: 20px;
-					align-items: start;
-				}
-				@media (max-width: 992px) {
-					.stop-content {
-						grid-template-columns: 1fr;
-					}
-					.stop-map-container {
-						order: -1;
-					}
-				}
-				.stop-map-container {
-					height: 280px;
-					border-radius: 8px;
-					overflow: hidden;
-					border: 1px solid var(--border-color);
-					background: var(--subtle-fg);
-				}
-				.stop-map-container iframe {
-					width: 100%;
-					height: 100%;
-					border: none;
-				}
-				/* Timesheet Form Styles - Modernized */
-				.timesheet-form {
-					display: flex;
-					flex-direction: column;
-					gap: 16px;
-				}
-				.timesheet-form .form-row {
-					display: grid;
-					grid-template-columns: 1fr 1fr;
-					gap: 16px;
-				}
-				@media (max-width: 768px) {
-					.timesheet-form .form-row {
-						grid-template-columns: 1fr;
-					}
-				}
-				.timesheet-form .form-group {
-					display: flex;
-					flex-direction: column;
-				}
-				.timesheet-form .form-group.full-width {
-					grid-column: 1 / -1;
-				}
-				.timesheet-form label {
-					display: block;
-					font-size: 12px;
-					font-weight: 600;
-					color: var(--text-color);
-					margin-bottom: 6px;
-					text-transform: uppercase;
-					letter-spacing: 0.3px;
-				}
-				.timesheet-form label .required {
-					color: #e74c3c;
-					margin-left: 2px;
-				}
-				.timesheet-form input,
-				.timesheet-form select,
-				.timesheet-form textarea {
-					width: 100%;
-					padding: 10px 12px;
-					border: 1px solid var(--border-color);
-					border-radius: 6px;
-					font-size: 14px;
-					background: var(--control-bg);
-					transition: all 0.2s ease;
-				}
-				.timesheet-form input:hover,
-				.timesheet-form select:hover,
-				.timesheet-form textarea:hover {
-					border-color: var(--gray-400);
-				}
-				.timesheet-form input:focus,
-				.timesheet-form select:focus,
-				.timesheet-form textarea:focus {
-					border-color: var(--primary);
-					outline: none;
-					box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
-					background: var(--card-bg);
-				}
-				.timesheet-form textarea {
-					min-height: 70px;
-					resize: vertical;
-				}
-				.timesheet-form .duration-input-wrapper {
-					position: relative;
-				}
-				.timesheet-form .duration-input-wrapper input {
-					padding-right: 50px;
-				}
-				.timesheet-form .duration-hint {
-					position: absolute;
-					right: 10px;
-					top: 50%;
-					transform: translateY(-50%);
-					font-size: 11px;
-					color: var(--text-muted);
-					pointer-events: none;
-				}
-				.timesheet-form .form-footer {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					padding-top: 16px;
-					margin-top: 8px;
-				}
-				.timesheet-form .time-info {
-					font-size: 13px;
-					color: var(--text-muted);
-					display: flex;
-					align-items: center;
-					gap: 6px;
-				}
-				.timesheet-form .time-info strong {
-					color: var(--text-color);
-					font-weight: 600;
-				}
-				.timesheet-form .btn-transfer {
-					display: inline-flex;
-					align-items: center;
-					gap: 8px;
-					padding: 12px 20px;
-					font-size: 14px;
-					font-weight: 600;
-					border-radius: 6px;
-					cursor: pointer;
-					background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark, var(--primary)) 100%);
-					color: white;
-					border: none;
-					transition: all 0.2s ease;
-					box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-				}
-				.timesheet-form .btn-transfer:hover {
-					transform: translateY(-1px);
-					box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-				}
-				.timesheet-form .btn-transfer:active {
-					transform: translateY(0);
-				}
-				.timesheet-form .btn-transfer:disabled {
-					background: var(--gray-400);
-					cursor: not-allowed;
-					transform: none;
-					box-shadow: none;
-				}
-				/* Inline fields row */
-				.timesheet-form .form-row-inline {
-					display: flex;
-					gap: 16px;
-				}
-				.timesheet-form .form-row-inline .form-group {
-					flex: 1;
-				}
-				.timesheet-form .form-row-inline .form-group.narrow {
-					flex: 0 0 120px;
-				}
-				.transfer-success {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-					padding: 10px 14px;
-					background: rgba(40, 167, 69, 0.1);
-					border-radius: 6px;
-					color: #28a745;
-					font-size: 13px;
-					margin-top: 12px;
-				}
-				.transfer-success i {
-					font-size: 16px;
-				}
-				.transfer-success a {
-					color: #28a745;
-					font-weight: 500;
-					text-decoration: underline;
-				}
-				.billed-info {
-					display: flex;
-					align-items: center;
-					gap: 8px;
-					margin-top: 10px;
-					padding: 8px 12px;
-					background: rgba(40, 167, 69, 0.1);
-					border-radius: 4px;
-					font-size: 12px;
-					color: #28a745;
-				}
-				.billed-info a {
-					color: #28a745;
-					font-weight: 500;
-				}
-				.empty-state {
-					padding: 60px 20px;
-					text-align: center;
-					color: var(--text-muted);
-				}
-				.empty-state i {
-					font-size: 48px;
-					margin-bottom: 15px;
-					opacity: 0.5;
-				}
-				/* Summary View Styles */
-				.summary-table {
-					width: 100%;
-					border-collapse: collapse;
-				}
-				.summary-table th,
-				.summary-table td {
-					padding: 12px;
-					border: 1px solid var(--border-color);
-					text-align: left;
-				}
-				.summary-table th {
-					background: var(--subtle-fg);
-					font-weight: 600;
-				}
-				.summary-table tr:hover {
-					background: var(--subtle-fg);
-				}
-				.text-right {
-					text-align: right;
-				}
-				/* Link field styling */
-				.link-field-wrapper {
-					position: relative;
-				}
-				.link-field-wrapper .awesomplete {
-					width: 100%;
-				}
-				.link-field-wrapper input {
-					width: 100%;
-				}
-				.link-field-wrapper .frappe-control {
-					margin: 0;
-				}
-				.link-field-wrapper .frappe-control .form-group {
-					margin: 0;
-				}
-				/* Trip Type Buttons */
-				.trip-type-buttons {
-					display: flex;
-					gap: 6px;
-					flex-wrap: wrap;
-				}
-				.btn-trip-type {
-					display: inline-flex;
-					align-items: center;
-					gap: 4px;
-					padding: 4px 10px;
-					border-radius: 4px;
-					font-size: 11px;
-					font-weight: 500;
-					cursor: pointer;
-					transition: all 0.2s ease;
-					border: 2px solid;
-				}
-				/* Commute - Yellow */
-				.btn-trip-type.commute {
-					background: rgba(255, 193, 7, 0.1);
-					border-color: rgba(255, 193, 7, 0.3);
-					color: #856404;
-				}
-				.btn-trip-type.commute:hover {
-					background: rgba(255, 193, 7, 0.2);
-					border-color: rgba(255, 193, 7, 0.5);
-				}
-				.btn-trip-type.commute.active {
-					background: #ffc107;
-					border-color: #ffc107;
-					color: #000;
-				}
-				/* Private - Purple */
-				.btn-trip-type.private {
-					background: rgba(155, 89, 182, 0.1);
-					border-color: rgba(155, 89, 182, 0.3);
-					color: #9b59b6;
-				}
-				.btn-trip-type.private:hover {
-					background: rgba(155, 89, 182, 0.2);
-					border-color: rgba(155, 89, 182, 0.5);
-				}
-				.btn-trip-type.private.active {
-					background: #9b59b6;
-					border-color: #9b59b6;
-					color: #fff;
-				}
-				/* Business - Green */
-				.btn-trip-type.business {
-					background: rgba(40, 167, 69, 0.1);
-					border-color: rgba(40, 167, 69, 0.3);
-					color: #28a745;
-				}
-				.btn-trip-type.business:hover {
-					background: rgba(40, 167, 69, 0.2);
-					border-color: rgba(40, 167, 69, 0.5);
-				}
-				.btn-trip-type.business.active {
-					background: #28a745;
-					border-color: #28a745;
-					color: #fff;
-				}
-				.btn-trip-type:disabled {
-					opacity: 0.5;
-					cursor: not-allowed;
-				}
-				/* Trip Ignore Checkbox */
-				.trip-ignore-option {
-					margin-top: 10px;
-					padding-top: 10px;
-					border-top: 1px dashed var(--border-color);
-				}
-				.trip-ignore-label {
-					display: flex;
-					align-items: center;
-					gap: 8px;
-					cursor: pointer;
-					font-size: 12px;
-					color: var(--text-muted);
-					margin: 0;
-				}
-				.trip-ignore-label:hover {
-					color: var(--primary);
-				}
-				.trip-ignore-checkbox {
-					width: 16px;
-					height: 16px;
-					cursor: pointer;
-				}
-				.trip-ignore-checkbox:checked + i {
-					color: var(--primary);
-				}
-				.trip-ignore-option.active {
-					background: rgba(var(--primary-rgb), 0.1);
-					border-radius: 4px;
-					padding: 8px;
-					margin-top: 8px;
-					border-top: none;
-				}
-				.trip-ignore-option.active .trip-ignore-label {
-					color: var(--primary);
-					font-weight: 500;
-				}
-				/* Hidden stop (when trip is ignored) */
-				.timeline-item.stop.hidden-by-ignore {
-					display: none;
-				}
-				/* Linked stops info in main stop */
-				.linked-stops-info {
-					background: rgba(var(--primary-rgb), 0.08);
-					border: 1px solid rgba(var(--primary-rgb), 0.2);
-					border-radius: 6px;
-					padding: 10px 12px;
-					margin-bottom: 12px;
-					font-size: 12px;
-				}
-				.linked-stops-info .linked-stops-header {
-					display: flex;
-					align-items: center;
-					gap: 6px;
-					font-weight: 600;
-					color: var(--primary);
-					margin-bottom: 4px;
-				}
-				.linked-stops-info .linked-stops-total {
-					color: var(--text-muted);
-				}
-				.linked-stops-info .linked-stops-driving {
-					margin-top: 6px;
-					padding-top: 6px;
-					border-top: 1px dashed rgba(var(--primary-rgb), 0.2);
-				}
-				.linked-stops-info .linked-stops-driving a {
-					color: var(--primary);
-					text-decoration: none;
-					cursor: pointer;
-				}
-				.linked-stops-info .linked-stops-driving a:hover {
-					text-decoration: underline;
-				}
-				.linked-stops-info .linked-stops-driving.included {
-					color: #28a745;
-				}
-				.linked-stops-info .linked-stops-driving.included a {
-					color: var(--text-muted);
-					font-size: 11px;
-					margin-left: 8px;
-				}
-				/* Trip Comment Section */
-				.trip-comment-section {
-					margin-top: 10px;
-					padding-top: 10px;
-					border-top: 1px dashed var(--border-color);
-				}
-				.comment-input-row {
-					display: flex;
-					gap: 8px;
-					align-items: center;
-				}
-				.trip-comment-input {
-					flex: 1;
-					padding: 6px 10px;
-					border: 1px solid var(--border-color);
-					border-radius: 4px;
-					font-size: 12px;
-					background: var(--control-bg);
-					color: var(--text-color);
-				}
-				.trip-comment-input:not([readonly]) {
-					background: var(--card-bg);
-					border-color: var(--primary);
-				}
-				.trip-comment-input:focus {
-					outline: none;
-					border-color: var(--primary);
-				}
-				.btn-update-comment {
-					padding: 6px 10px;
-					border: 1px solid var(--border-color);
-					border-radius: 4px;
-					background: var(--control-bg);
-					color: var(--text-muted);
-					cursor: pointer;
-					transition: all 0.2s;
-				}
-				.btn-update-comment:hover {
-					background: var(--primary);
-					color: white;
-					border-color: var(--primary);
-				}
-				.btn-update-comment.editing {
-					background: var(--primary);
-					color: white;
-					border-color: var(--primary);
-				}
-				.btn-update-comment.saving {
-					opacity: 0.7;
-					cursor: wait;
-				}
-				.btn-copy-last-comment {
-					display: inline-flex;
-					align-items: center;
-					gap: 3px;
-					padding: 6px 10px;
-					border: 1px solid var(--border-color);
-					border-radius: 4px;
-					background: var(--control-bg);
-					color: var(--text-muted);
-					cursor: pointer;
-					transition: all 0.2s;
-					font-size: 12px;
-				}
-				.btn-copy-last-comment:hover {
-					background: #ffc107;
-					color: #000;
-					border-color: #ffc107;
-				}
-				/* Stop Tabs */
-				.stop-shared-fields {
-					margin-bottom: 12px;
-				}
-				.stop-shared-fields .form-row {
-					display: grid;
-					grid-template-columns: 1fr 1fr;
-					gap: 16px;
-				}
-				.stop-shared-fields .form-group {
-					display: flex;
-					flex-direction: column;
-				}
-				.stop-shared-fields label {
-					display: block;
-					font-size: 12px;
-					font-weight: 600;
-					color: var(--text-color);
-					margin-bottom: 6px;
-					text-transform: uppercase;
-					letter-spacing: 0.3px;
-				}
-				.stop-shared-fields label .required {
-					color: #e74c3c;
-					margin-left: 2px;
-				}
-				.stop-tabs {
-					display: flex;
-					gap: 0;
-					border-bottom: 2px solid var(--border-color);
-					margin-bottom: 16px;
-				}
-				.stop-tab {
-					padding: 8px 16px;
-					border: none;
-					background: none;
-					color: var(--text-muted);
-					font-size: 13px;
-					font-weight: 600;
-					cursor: pointer;
-					border-bottom: 2px solid transparent;
-					margin-bottom: -2px;
-					transition: all 0.2s;
-					display: flex;
-					align-items: center;
-					gap: 6px;
-				}
-				.stop-tab:hover {
-					color: var(--text-color);
-				}
-				.stop-tab.active {
-					color: var(--primary);
-					border-bottom-color: var(--primary);
-				}
-				.stop-tab-panel {
-					display: none;
-				}
-				.stop-tab-panel.active {
-					display: block;
-				}
-				/* Delivery Note Form */
-				.dn-items-container {
-					display: flex;
-					flex-direction: column;
-					gap: 8px;
-				}
-				.dn-item-row {
-					display: flex;
-					gap: 12px;
-					align-items: flex-end;
-				}
-				.dn-item-row .form-group label {
-					display: block;
-					font-size: 12px;
-					font-weight: 600;
-					color: var(--text-color);
-					margin-bottom: 6px;
-					text-transform: uppercase;
-					letter-spacing: 0.3px;
-				}
-				.dn-item-row .form-group label .required {
-					color: #e74c3c;
-					margin-left: 2px;
-				}
-				.dn-item-qty {
-					width: 100%;
-					padding: 10px 12px;
-					border: 1px solid var(--border-color);
-					border-radius: 6px;
-					font-size: 14px;
-					background: var(--control-bg);
-				}
-				.dn-item-qty:focus {
-					border-color: var(--primary);
-					outline: none;
-					box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
-				}
-				.btn-remove-dn-item {
-					padding: 10px;
-					border: 1px solid var(--border-color);
-					border-radius: 6px;
-					background: none;
-					color: var(--text-muted);
-					cursor: pointer;
-					flex-shrink: 0;
-				}
-				.btn-remove-dn-item:hover {
-					background: #e74c3c;
-					color: white;
-					border-color: #e74c3c;
-				}
-				.btn-add-dn-item {
-					margin-top: 8px;
-					padding: 8px 14px;
-					border: 1px dashed var(--border-color);
-					border-radius: 6px;
-					background: none;
-					color: var(--text-muted);
-					cursor: pointer;
-					font-size: 12px;
-					transition: all 0.2s;
-				}
-				.btn-add-dn-item:hover {
-					border-color: var(--primary);
-					color: var(--primary);
-					background: rgba(var(--primary-rgb), 0.05);
-				}
-				.btn-create-dn {
-					display: inline-flex;
-					align-items: center;
-					gap: 8px;
-					padding: 12px 20px;
-					font-size: 14px;
-					font-weight: 600;
-					border-radius: 6px;
-					cursor: pointer;
-					background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-					color: white;
-					border: none;
-					transition: all 0.2s ease;
-					box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-				}
-				.btn-create-dn:hover {
-					transform: translateY(-1px);
-					box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-				}
-				.btn-create-dn:disabled {
-					background: var(--gray-400);
-					cursor: not-allowed;
-					transform: none;
-					box-shadow: none;
-				}
-				.dn-posting-date-label {
-					display: flex !important;
-					align-items: center;
-					gap: 8px;
-					text-transform: none !important;
-					font-weight: 500 !important;
-				}
-				.dn-posting-date {
-					width: 100%;
-					padding: 10px 12px;
-					border: 1px solid var(--border-color);
-					border-radius: 6px;
-					font-size: 14px;
-					background: var(--control-bg);
-					margin-top: 8px;
-				}
-				.dn-posting-date:focus {
-					border-color: var(--primary);
-					outline: none;
-				}
-				.dn-result .transfer-success {
-					color: #2e7d32;
-					background: rgba(46, 125, 50, 0.1);
-				}
-				.dn-result .transfer-success a {
-					color: #2e7d32;
-				}
-				.comment-missing-indicator {
-					display: inline-flex;
-					align-items: center;
-					justify-content: center;
-					width: 22px;
-					height: 22px;
-					border-radius: 50%;
-					background: #f90;
-					color: #fff;
-					font-size: 13px;
-					font-weight: 700;
-					cursor: help;
-					flex-shrink: 0;
-				}
-			</style>
 		`);
 	}
 
@@ -1563,8 +473,12 @@ class YesHugoTripsPage {
 					const distance = trip.distance || 0;
 					if (trip.reason === 'PRIVATE') {
 						privateDistance += distance;
+					} else if (trip.reason === 'BUSINESS' && trip.private_distance && trip.private_distance > 0) {
+						// Business trip with a partial private split
+						businessDistance += Math.max(0, distance - trip.private_distance);
+						privateDistance += trip.private_distance;
 					} else {
-						// BUSINESS and COMMUTE count as business
+						// Fully BUSINESS or COMMUTE count as business
 						businessDistance += distance;
 					}
 				}
@@ -1734,6 +648,7 @@ class YesHugoTripsPage {
 			for (const vehicle of day.vehicles) {
 				let vehicleStopCount = 0; // Track stops within this vehicle to know if we're at the first one
 				let lastTripComment = ''; // Track last non-empty comment for copy button
+				let lastTripBusinessKm = null; // Track previous trip's business km for the copy button
 
 				html += `
 					<div class="vehicle-section">
@@ -1767,6 +682,14 @@ class YesHugoTripsPage {
 
 					// Render trip
 					const isPrivate = trip.reason === 'PRIVATE';
+					const isBusiness = trip.reason === 'BUSINESS';
+					// Business portion: use stored split if a private part was recorded,
+					// otherwise default to the full distance (= fully business).
+					const tripDistance = trip.distance || 0;
+					const businessKm = (trip.private_distance && trip.private_distance > 0)
+						? Math.max(0, tripDistance - trip.private_distance)
+						: tripDistance;
+					const privateRemainder = Math.max(0, tripDistance - businessKm);
 					html += `
 						<div class="timeline-item trip ${isPrivate ? 'private' : ''}" data-trip-name="${trip.name}">
 							<div class="trip-card ${isPrivate ? 'private' : ''}">
@@ -1800,6 +723,14 @@ class YesHugoTripsPage {
 									</div>
 									${trip.end_latitude && trip.end_longitude ? `<button class="btn-show-map" data-lat="${trip.end_latitude}" data-lon="${trip.end_longitude}" data-address="${(trip.end_address || '').replace(/"/g, '&quot;')}" title="${__('Karte anzeigen')}"><i class="fa fa-map-marker"></i></button>` : ''}
 								</div>
+								<div class="trip-business-split" data-trip-name="${trip.name}" style="${isBusiness ? '' : 'display:none;'}">
+									<label class="business-split-label"><i class="fa fa-briefcase"></i> ${__('davon geschäftlich')}:</label>
+									<input type="number" class="business-km-input" value="${businessKm.toFixed(1)}" min="0" max="${tripDistance.toFixed(1)}" step="0.1" readonly>
+									<span class="business-split-unit">km</span>
+									${lastTripBusinessKm !== null ? `<button class="btn-copy-last-business" data-last-business="${lastTripBusinessKm.toFixed(1)}" title="${__('Geschäftliche km von vorheriger Fahrt übernehmen')}"><i class="fa fa-arrow-up"></i><i class="fa fa-copy"></i></button>` : ''}
+									<button class="btn-edit-business" title="${__('Geschäftliche km bearbeiten')}"><i class="fa fa-pencil"></i></button>
+									<span class="business-split-private-hint">(${privateRemainder.toFixed(1)} km ${__('privat')})</span>
+								</div>
 								${!isPrivate && vehicleStopCount > 0 && (hasStopAfter || hasFutureStops) ? `
 								<div class="trip-ignore-option" data-trip-name="${trip.name}">
 									<label class="trip-ignore-label">
@@ -1827,6 +758,8 @@ class YesHugoTripsPage {
 					// Track immediate previous trip's comment for copy button
 					// Reset each time so only the direct predecessor counts
 					lastTripComment = (trip.comment && trip.comment.trim()) ? trip.comment.trim() : '';
+					// Track previous trip's business km so the next trip can copy it
+					lastTripBusinessKm = businessKm;
 
 					// Check if there's a stop after this trip (only for non-private trips)
 					if (!isPrivate) {
@@ -2119,6 +1052,7 @@ class YesHugoTripsPage {
 		this.bind_transfer_buttons();
 		this.bind_map_buttons();
 		this.bind_trip_type_buttons();
+		this.bind_business_split();
 		this.bind_link_checkboxes();
 		this.bind_comment_buttons();
 		this.bind_copy_comment_buttons();
@@ -2883,6 +1817,21 @@ class YesHugoTripsPage {
 						}
 					}
 
+					// Show the business-split input only for business trips.
+					// Switching to BUSINESS resets the trip to fully business
+					// (update_trip_reason sends privateDistanceInNonPrivateTrip = 0),
+					// so reset the input to the full distance.
+					const splitRow = tripCard.find('.trip-business-split');
+					if (reason === 'BUSINESS') {
+						const splitInput = splitRow.find('.business-km-input');
+						const maxKm = parseFloat(splitInput.attr('max')) || 0;
+						splitInput.val(maxKm.toFixed(1));
+						splitRow.find('.business-split-private-hint').text(`(0.0 km ${__('privat')})`);
+						splitRow.show();
+					} else {
+						splitRow.hide();
+					}
+
 					frappe.show_alert({
 						message: data.message,
 						indicator: 'green'
@@ -2906,6 +1855,105 @@ class YesHugoTripsPage {
 				allButtons.prop('disabled', false);
 			}
 		});
+	}
+
+	bind_business_split() {
+		const self = this;
+
+		// Update the "(X km privat)" hint live while typing
+		this.page.main.find('.business-km-input').on('input', function() {
+			const input = $(this);
+			const row = input.closest('.trip-business-split');
+			const maxKm = parseFloat(input.attr('max')) || 0;
+			let businessKm = parseFloat(input.val());
+			if (isNaN(businessKm) || businessKm < 0) businessKm = 0;
+			if (businessKm > maxKm) businessKm = maxKm;
+			const priv = Math.max(0, maxKm - businessKm);
+			row.find('.business-split-private-hint').text(`(${priv.toFixed(1)} km ${__('privat')})`);
+		});
+
+		// Edit / Save button (same pattern as the comment pencil)
+		this.page.main.find('.btn-edit-business').on('click', async function() {
+			const btn = $(this);
+			const row = btn.closest('.trip-business-split');
+			const input = row.find('.business-km-input');
+
+			if (input.attr('readonly')) {
+				// Switch to edit mode
+				input.removeAttr('readonly').focus().select();
+				btn.addClass('editing').html('<i class="fa fa-check"></i>');
+			} else {
+				// Save, then switch back to readonly mode
+				btn.addClass('saving').prop('disabled', true);
+				await self.save_business_split(row);
+				input.attr('readonly', true);
+				btn.removeClass('editing saving').prop('disabled', false).html('<i class="fa fa-pencil"></i>');
+			}
+		});
+
+		// Allow Enter key to save
+		this.page.main.find('.business-km-input').on('keypress', function(e) {
+			if (e.which === 13) {
+				$(this).closest('.trip-business-split').find('.btn-edit-business').click();
+			}
+		});
+
+		// Copy business km from the previous trip -> fill and save immediately
+		this.page.main.find('.btn-copy-last-business').on('click', async function() {
+			const btn = $(this);
+			const row = btn.closest('.trip-business-split');
+			const input = row.find('.business-km-input');
+			const maxKm = parseFloat(input.attr('max')) || 0;
+			let v = parseFloat(btn.data('last-business'));
+			if (isNaN(v)) return;
+			if (v > maxKm) v = maxKm;
+			if (v < 0) v = 0;
+			input.val(v.toFixed(1)).trigger('input');
+			await self.save_business_split(row);
+		});
+	}
+
+	async save_business_split(row) {
+		const input = row.find('.business-km-input');
+		const tripName = row.data('trip-name');
+		const maxKm = parseFloat(input.attr('max')) || 0;
+		let businessKm = parseFloat(input.val());
+		if (isNaN(businessKm) || businessKm < 0) businessKm = 0;
+		if (businessKm > maxKm) businessKm = maxKm;
+		businessKm = Math.round(businessKm * 10) / 10;
+		input.val(businessKm.toFixed(1));
+
+		input.prop('disabled', true);
+		try {
+			const result = await frappe.call({
+				method: 'yeshugo_erpnext.yeshugo_erpnext.page.yeshugo_trips.yeshugo_trips.update_trip_business_split',
+				args: {
+					trip_name: tripName,
+					business_km: businessKm
+				}
+			});
+
+			const data = result.message;
+			if (data && data.success) {
+				row.find('.business-split-private-hint').text(`(${data.private_km.toFixed(1)} km ${__('privat')})`);
+				frappe.show_alert({ message: data.message, indicator: 'green' });
+			} else {
+				frappe.msgprint({
+					title: __('Fehler'),
+					message: (data && data.message) || __('Aktualisierung fehlgeschlagen'),
+					indicator: 'red'
+				});
+			}
+		} catch (error) {
+			console.error('Business split update error:', error);
+			frappe.msgprint({
+				title: __('Fehler'),
+				message: error.message || __('Aktualisierung fehlgeschlagen'),
+				indicator: 'red'
+			});
+		} finally {
+			input.prop('disabled', false);
+		}
 	}
 
 	init_link_fields(data) {

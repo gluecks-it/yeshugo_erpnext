@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-10 12:00:00.000000",
+ "description": "Reisespesenabrechnung: Mitarbeiter + Zeitraum wählen, beim Speichern werden alle geschäftlichen Fahrten geholt; Einreichen schreibt fest und sperrt die Fahrten.",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "employee",
+  "employee_name",
+  "company",
+  "column_break_1",
+  "from_date",
+  "to_date",
+  "rate_per_km",
+  "section_totals",
+  "total_km",
+  "total_reimbursement",
+  "section_rows",
+  "rows",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "RSP-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Serie",
+   "options": "RSP-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Mitarbeiter",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Firma",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Von Datum",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Bis Datum",
+   "reqd": 1
+  },
+  {
+   "default": "0.30",
+   "fieldname": "rate_per_km",
+   "fieldtype": "Float",
+   "label": "Erstattung pro km",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_totals",
+   "fieldtype": "Section Break",
+   "label": "Summen"
+  },
+  {
+   "fieldname": "total_km",
+   "fieldtype": "Float",
+   "label": "Kilometer gesamt",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_reimbursement",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Summe Erstattung",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_rows",
+   "fieldtype": "Section Break",
+   "label": "Fahrten"
+  },
+  {
+   "fieldname": "rows",
+   "fieldtype": "Table",
+   "label": "Fahrten",
+   "options": "YesHugo Travel Expense Report Row",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "YesHugo Travel Expense Report",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-10 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Yeshugo Erpnext",
+ "name": "YesHugo Travel Expense Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "employee_name",
+ "track_changes": 1
+}

@@ -718,6 +718,67 @@ def update_trip_reason(trip_name, reason):
 
 
 @frappe.whitelist()
+def update_trip_business_split(trip_name, business_km):
+	"""
+	Mark a business trip as partially private.
+
+	The trip stays reason=BUSINESS. The given business_km is the portion that
+	counts as business; the remainder (distance - business_km) is booked as
+	private via YesHugo's privateDistanceInNonPrivateTrip field and stored
+	locally so the Reisespesenabrechnung counts only the business part.
+
+	Args:
+		trip_name: The local YesHugo Trip document name
+		business_km: Business portion of the trip in km
+
+	Returns:
+		Success status with computed business/private km
+	"""
+	try:
+		trip = frappe.get_doc("YesHugo Trip", trip_name)
+
+		total_km = trip.distance or 0
+		try:
+			business_km = float(business_km)
+		except (ValueError, TypeError):
+			return {"success": False, "message": _("Invalid kilometer value")}
+
+		# Clamp to valid range [0, total]
+		business_km = max(0.0, min(business_km, total_km))
+		business_km = round(business_km, 1)
+		private_km = round(total_km - business_km, 1)
+
+		# Update in YesHugo API (private portion in meters)
+		if trip.external_id:
+			from yeshugo_erpnext.yeshugo_erpnext.doctype.yeshugo_settings.yeshugo_api import YesHugoAPIClient
+			client = YesHugoAPIClient()
+			result = client.update_trip_private_split(trip.external_id, private_km * 1000)
+
+			if not result:
+				return {"success": False, "message": _("Failed to update in YesHugo API")}
+
+		# Update local record - set the split directly so the report is correct
+		# regardless of how/when the next sync echoes the values back.
+		trip.reason = "BUSINESS"
+		trip.business_distance = business_km
+		trip.private_distance = private_km
+		trip.commute_distance = 0
+		trip.save(ignore_permissions=True)
+		frappe.db.commit()
+
+		return {
+			"success": True,
+			"message": _("Split saved: {0} km business, {1} km private").format(business_km, private_km),
+			"business_km": business_km,
+			"private_km": private_km
+		}
+
+	except Exception as e:
+		frappe.log_error(f"Error updating trip business split: {str(e)}", "YesHugo Trip Update")
+		return {"success": False, "message": str(e)}
+
+
+@frappe.whitelist()
 def update_trip_comment(trip_name, comment):
 	"""
 	Update the comment for a trip and sync to YesHugo API.
