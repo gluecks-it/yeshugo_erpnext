@@ -5,7 +5,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "trip",
   "trip_date",
   "customer",
   "km",
@@ -14,35 +13,26 @@
  "fields": [
   {
    "columns": 2,
-   "fieldname": "trip",
-   "fieldtype": "Link",
+   "fieldname": "trip_date",
+   "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Fahrt",
-   "options": "YesHugo Trip",
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "columns": 5,
+   "fieldname": "customer",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Customer",
    "read_only": 1
   },
   {
    "columns": 2,
-   "fieldname": "trip_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Datum",
-   "read_only": 1
-  },
-  {
-   "columns": 4,
-   "fieldname": "customer",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Kunden",
-   "read_only": 1
-  },
-  {
-   "columns": 1,
    "fieldname": "km",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Kilometer",
+   "label": "Distance (km)",
    "precision": "1",
    "read_only": 1
   },
@@ -51,7 +41,7 @@
    "fieldname": "reimbursement",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Erstattung",
+   "label": "Reimbursement",
    "read_only": 1
   }
  ],

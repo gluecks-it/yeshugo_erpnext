@@ -2,7 +2,7 @@
  "actions": [],
  "autoname": "naming_series:",
  "creation": "2026-01-10 12:00:00.000000",
- "description": "Reisespesenabrechnung: Mitarbeiter + Zeitraum wählen, beim Speichern werden alle geschäftlichen Fahrten geholt; Einreichen schreibt fest und sperrt die Fahrten.",
+ "description": "Travel expense report: pick an employee and period; on save all business trips are fetched; submitting locks the report and its trips.",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -26,7 +26,7 @@
    "default": "RSP-.YYYY.-",
    "fieldname": "naming_series",
    "fieldtype": "Select",
-   "label": "Serie",
+   "label": "Series",
    "options": "RSP-.YYYY.-",
    "reqd": 1
   },
@@ -35,7 +35,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Mitarbeiter",
+   "label": "Employee",
    "options": "Employee",
    "reqd": 1
   },
@@ -50,7 +50,7 @@
    "fetch_from": "employee.company",
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Firma",
+   "label": "Company",
    "options": "Company",
    "read_only": 1
   },
@@ -62,32 +62,32 @@
    "fieldname": "from_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Von Datum",
+   "label": "From Date",
    "reqd": 1
   },
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Bis Datum",
+   "label": "To Date",
    "reqd": 1
   },
   {
    "default": "0.30",
    "fieldname": "rate_per_km",
    "fieldtype": "Float",
-   "label": "Erstattung pro km",
+   "label": "Reimbursement per km",
    "precision": "2"
   },
   {
    "fieldname": "section_totals",
    "fieldtype": "Section Break",
-   "label": "Summen"
+   "label": "Totals"
   },
   {
    "fieldname": "total_km",
    "fieldtype": "Float",
-   "label": "Kilometer gesamt",
+   "label": "Total Distance (km)",
    "precision": "1",
    "read_only": 1
   },
@@ -95,18 +95,18 @@
    "fieldname": "total_reimbursement",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Summe Erstattung",
+   "label": "Total Reimbursement",
    "read_only": 1
   },
   {
    "fieldname": "section_rows",
    "fieldtype": "Section Break",
-   "label": "Fahrten"
+   "label": "Trips"
   },
   {
    "fieldname": "rows",
    "fieldtype": "Table",
-   "label": "Fahrten",
+   "label": "Trips",
    "options": "YesHugo Travel Expense Report Row",
    "read_only": 1
   },

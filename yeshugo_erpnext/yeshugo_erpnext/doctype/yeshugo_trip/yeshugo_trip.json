@@ -20,6 +20,7 @@
   "column_break_billing",
   "delivery_note",
   "travel_expense_report",
+  "travel_expense_report_detail",
   "section_distance",
   "start_odometer",
   "end_odometer",
@@ -140,11 +141,19 @@
    "read_only": 1
   },
   {
-   "description": "Reisespesenabrechnung, in der diese Fahrt festgeschrieben ist",
+   "description": "Travel expense report this trip is locked in",
    "fieldname": "travel_expense_report",
    "fieldtype": "Link",
-   "label": "Reisespesenabrechnung",
+   "label": "Travel Expense Report",
    "options": "YesHugo Travel Expense Report",
+   "read_only": 1
+  },
+  {
+   "description": "The consolidated line of the travel expense report this trip was merged into",
+   "fieldname": "travel_expense_report_detail",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Travel Expense Report Detail",
    "read_only": 1
   },
   {
