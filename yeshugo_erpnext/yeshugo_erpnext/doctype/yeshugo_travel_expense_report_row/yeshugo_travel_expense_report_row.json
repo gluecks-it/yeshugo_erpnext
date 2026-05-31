@@ -24,8 +24,7 @@
    "fieldname": "customer",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Customer",
-   "read_only": 1
+   "label": "Customer"
   },
   {
    "columns": 2,

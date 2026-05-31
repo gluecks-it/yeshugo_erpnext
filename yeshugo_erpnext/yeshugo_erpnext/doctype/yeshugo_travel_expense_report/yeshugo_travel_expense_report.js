@@ -15,13 +15,29 @@ function get_trips(frm) {
 		return;
 	}
 
-	const fetch = () =>
-		frm.call("get_trips").then(() => frm.reload_doc());
-
-	// Make sure employee/dates are persisted before fetching, then reload.
-	if (frm.is_new() || frm.is_dirty()) {
-		frm.save().then(fetch);
-	} else {
-		fetch();
-	}
+	frappe.call({
+		method: "yeshugo_erpnext.yeshugo_erpnext.doctype.yeshugo_travel_expense_report.yeshugo_travel_expense_report.get_trip_rows",
+		args: {
+			employee: frm.doc.employee,
+			from_date: frm.doc.from_date,
+			to_date: frm.doc.to_date,
+			rate_per_km: frm.doc.rate_per_km,
+			report: frm.doc.name,
+		},
+		freeze: true,
+		freeze_message: __("Hole Fahrten..."),
+		callback(r) {
+			const rows = r.message || [];
+			// Fill the grid client-side; nothing is saved - the user reviews,
+			// deletes unwanted lines and saves when ready.
+			frm.clear_table("rows");
+			rows.forEach((row) => frm.add_child("rows", row));
+			frm.refresh_field("rows");
+			frm.dirty();
+			frappe.show_alert({
+				message: __("{0} Zeile(n) geholt - bitte prüfen und speichern.", [rows.length]),
+				indicator: "green",
+			});
+		},
+	});
 }
